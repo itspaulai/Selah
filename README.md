@@ -17,11 +17,26 @@
   </p>
 
   <p>
+    <a href="#-showcase">Showcase</a> •
     <a href="#-download-apk">Download APK</a> •
     <a href="#-highlights">Highlights</a> •
     <a href="#-29-material-design-3-expressive-shapes">29 Expressive Shapes</a> •
     <a href="#-offline-scripture-library">Offline Library</a> •
     <a href="#-building-from-source">Build & Release</a>
+  </p>
+
+  <br />
+
+  <p align="center">
+    <img src="docs/play-store/01-home-screen-widgets.jpg" alt="Daily Scripture, Shaped for Your Home Screen" width="23%" />
+    <img src="docs/play-store/02-today-reflection.jpg" alt="A Quiet Moment of Scripture Every Day" width="23%" />
+    <img src="docs/play-store/03-widget-studio.jpg" alt="29 Material 3 Expressive Shapes" width="23%" />
+    <img src="docs/play-store/04-material-you-colors.jpg" alt="Adapts to Your Wallpaper Automatically" width="23%" />
+  </p>
+  <p align="center">
+    <img src="docs/play-store/05-chapter-reader.jpg" alt="Read Every Daily Verse in Full Context" width="23%" />
+    <img src="docs/play-store/06-offline-library.jpg" alt="1,000 Curated Verses. Zero Ads or Tracking." width="23%" />
+    <img src="docs/play-store/07-sizes-and-typography.jpg" alt="Small, Medium & Large. Serif or Pixel Sans." width="23%" />
   </p>
 </div>
 
@@ -30,6 +45,33 @@
 ## ✨ About Selah
 
 **Selah** is a minimalist, privacy-first **daily Bible verse app and Android home screen widget** designed to feel native on Google Pixel and Material You devices. Whether you are looking for a clean **Bible verse of the day widget**, an **offline scripture reader with chapter context**, or a **Material 3 Expressive Android widget** that automatically adapts to your wallpaper colors, Selah delivers a quiet, distraction-free daily reading experience—completely offline and free of ads, accounts, or analytics.
+
+---
+
+## 🖼️ Showcase
+
+### Overview — Light Mode UI & Widget Studio
+<p align="center">
+  <img src="docs/showcase/01-hero-overview.jpg" alt="Selah — Today screen, Home Screen Widget, and Widget Studio in Light Mode" width="100%" />
+</p>
+
+### Home Screen Widgets — Dynamic Material You Colors, Shapes & Placements
+<p align="center">
+  <img src="docs/showcase/02-widgets-homescreens-warm-and-sage.jpg" alt="Selah home screen widgets across Terracotta, Sage, Periwinkle, and Amber wallpapers" width="100%" />
+</p>
+<p align="center">
+  <img src="docs/showcase/03-widgets-homescreens-pastel-and-glass.jpg" alt="Selah home screen widgets in Arch, Very Sunny, 4-sided Cookie, and Soft Translucent Glass styles" width="100%" />
+</p>
+
+### Expressive Shapes & Surface Styles
+<p align="center">
+  <img src="docs/showcase/04-expressive-shapes-and-colors.jpg" alt="Selah Material Design 3 Expressive widget shapes and dynamic color palettes" width="100%" />
+</p>
+
+### Calm Offline Reader & Scripture Library (Light Mode)
+<p align="center">
+  <img src="docs/showcase/05-app-reader-and-library-light.jpg" alt="Selah Chapter Reader and Scripture Library in Light Mode" width="100%" />
+</p>
 
 ---
 
