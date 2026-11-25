@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Fallback Dark Palette (Android 7-11) -->
+    <color name="widget_bg_tonal">#1C221D</color>
+    <color name="widget_bg_tonal_stroke">#2E3830</color>
+    <color name="widget_text_primary">#EFF3EE</color>
+    <color name="widget_text_secondary">#A7CDA9</color>
+    <color name="widget_badge_bg">#2D4232</color>
+    <color name="widget_badge_text">#D2E8D4</color>
+    <color name="widget_accent">#A7CDA9</color>
+
+    <color name="widget_bg_expressive">#263B2B</color>
+    <color name="widget_bg_expressive_stroke">#3A5640</color>
+    <color name="widget_expressive_text">#EBF5EC</color>
+    <color name="widget_expressive_secondary">#BFE0C1</color>
+    <color name="widget_expressive_badge_bg">#A5CCA9</color>
+    <color name="widget_expressive_badge_text">#122416</color>
+
+    <color name="widget_bg_contrast">#111412</color>
+    <color name="widget_bg_contrast_stroke">#303631</color>
+    <color name="widget_contrast_text">#FFFFFF</color>
+    <color name="widget_contrast_secondary">#A7CDA9</color>
+
+    <color name="widget_bg_translucent">#CC181D19</color>
+    <color name="widget_bg_translucent_stroke">#33FFFFFF</color>
+</resources>

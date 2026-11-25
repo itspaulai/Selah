@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/widget_shape_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        android:scaleType="fitCenter"
+        android:src="@drawable/bg_widget_scallop_tonal" />
+
+    <ImageView
+        android:id="@+id/widget_text_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        android:scaleType="fitCenter"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/widget_arc_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/widget_reference_arc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:adjustViewBounds="true"
+            android:contentDescription="@null"
+            android:scaleType="fitCenter" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/widget_content_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingHorizontal="12dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="16dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/widget_verse_text_serif"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/newsreader"
+                android:gravity="center_horizontal"
+                android:includeFontPadding="false"
+                android:lineSpacingMultiplier="0.92"
+                android:text="The Lord is my shepherd;\nI shall lack nothing."
+                android:textColor="@color/widget_text_primary"
+                android:textSize="13dp"
+                android:visibility="gone"
+                tools:ignore="SpUsage"
+                tools:targetApi="o" />
+
+            <TextView
+                android:id="@+id/widget_verse_text_sans"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/google_sans_flex"
+                android:gravity="center_horizontal"
+                android:includeFontPadding="false"
+                android:lineSpacingMultiplier="0.92"
+                android:text="The Lord is my shepherd;\nI shall lack nothing."
+                android:textColor="@color/widget_text_primary"
+                android:textSize="13dp"
+                tools:ignore="SpUsage"
+                tools:targetApi="o" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/widget_reference"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/google_sans_flex"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:text="Psalm 23:1"
+            android:textColor="@color/widget_text_secondary"
+            android:textSize="11dp"
+            android:textStyle="bold"
+            tools:ignore="SpUsage"
+            tools:targetApi="o" />
+    </LinearLayout>
+</FrameLayout>

@@ -1,0 +1,72 @@
+<resources>
+    <string name="app_name">Selah</string>
+
+    <!-- Navigation -->
+    <string name="nav_today">Today</string>
+    <string name="nav_widget">Widget</string>
+    <string name="nav_library">Library</string>
+
+    <!-- Widget Provider Labels & Descriptions -->
+    <string name="widget_small_label">Selah · Small (2×2)</string>
+    <string name="widget_small_description">Compact daily Bible verse and reference with Material You colors.</string>
+    <string name="widget_medium_label">Selah · Medium (4×2)</string>
+    <string name="widget_medium_description">Balanced daily Bible verse and reference with adaptive colors.</string>
+    <string name="widget_large_label">Selah · Large (4×4)</string>
+    <string name="widget_large_description">Spacious daily Bible verse and reference with expressive shapes.</string>
+
+    <!-- Today Screen -->
+    <string name="today_badge">Daily Verse</string>
+    <string name="action_read_chapter">Read in context</string>
+    <string name="action_favorite_add">Save verse</string>
+    <string name="action_favorite_remove">Remove from saved</string>
+    <string name="action_share">Share</string>
+    <string name="action_copy">Copy</string>
+    <string name="snackbar_copied">Verse copied to clipboard</string>
+    <string name="snackbar_saved">Saved to your favorites</string>
+    <string name="snackbar_removed">Removed from favorites</string>
+    <string name="today_widget_promo_title">Home Screen Widget</string>
+    <string name="today_widget_promo_subtitle">Updates automatically each day with your wallpaper colors.</string>
+    <string name="today_widget_promo_action">Customize</string>
+    <string name="today_reflection_label">Take a quiet moment</string>
+
+    <!-- Widget Studio -->
+    <string name="widget_studio_title">Widget Studio</string>
+    <string name="widget_studio_subtitle">Live preview with adaptive Material 3 colors</string>
+    <string name="widget_size_small">Small</string>
+    <string name="widget_size_medium">Medium</string>
+    <string name="widget_size_large">Large</string>
+    <string name="widget_add_button">Add %1$s widget to home screen</string>
+    <string name="widget_pin_requested">Widget prompt opened — place it on your home screen.</string>
+    <string name="widget_pin_manual_title">Add widget from your home screen</string>
+    <string name="widget_pin_manual_body">Your launcher does not support one-tap pinning. Long-press an empty space on your home screen, choose Widgets, and select Selah (Small, Medium, or Large).</string>
+    <string name="widget_section_shape">Widget Shape</string>
+    <string name="widget_shape_all_button">All %1$d</string>
+    <string name="widget_shape_gallery_title">Expressive Shapes</string>
+    <string name="widget_shape_gallery_subtitle">Choose from %1$d Material 3 shapes for your daily verse</string>
+    <string name="widget_section_translation">Bible Translation</string>
+    <string name="widget_section_surface">Widget Surface</string>
+    <string name="widget_section_typography">Typography &amp; Scale</string>
+    <string name="widget_section_theme">App Theme</string>
+    <string name="toggle_dynamic_color">Dynamic wallpaper colors</string>
+    <string name="toggle_dynamic_color_desc">Match your device wallpaper palette (Android 12+)</string>
+
+    <!-- Library -->
+    <string name="library_title">Scripture Library</string>
+    <string name="library_search_hint">Search verses, books, or themes</string>
+    <string name="library_filter_all">All</string>
+    <string name="library_filter_saved">Saved</string>
+    <string name="library_empty_saved_title">No saved verses yet</string>
+    <string name="library_empty_saved_body">Tap the heart on any daily verse or chapter passage to keep it close for quiet reflection.</string>
+    <string name="library_empty_search_title">No matching verses</string>
+    <string name="library_empty_search_body">Try searching a book name like Psalm, Proverbs, or a word like peace or strength.</string>
+
+    <!-- Reader -->
+    <string name="reader_back">Navigate back</string>
+    <string name="reader_highlighted_note">Featured verse</string>
+    <string name="reader_translation_sheet_title">Choose translation</string>
+
+    <!-- About / Privacy -->
+    <string name="about_title">About Selah</string>
+    <string name="about_body">Selah is a calm, open-source daily scripture app built for privacy and focus.\n\n• 100% offline — no internet permission required\n• No accounts, no tracking, no ads\n• Public domain translations: World English Bible (WEB), King James Version (KJV), American Standard Version (ASV), and Bible in Basic English (BBE)\n• Automatic daily widget updates with Material You dynamic colors</string>
+    <string name="action_close">Close</string>
+</resources>

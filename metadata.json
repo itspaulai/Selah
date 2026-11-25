@@ -1,0 +1,6 @@
+{
+  "name": "Selah",
+  "description": "A calm, offline-first daily Bible verse app and Material 3 Expressive home screen widget with dynamic wallpaper colors and multiple translations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

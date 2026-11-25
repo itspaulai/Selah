@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Android 12+ Material You Dynamic Light Palette -->
+    <color name="widget_bg_tonal">@android:color/system_neutral1_50</color>
+    <color name="widget_bg_tonal_stroke">@android:color/system_neutral2_200</color>
+    <color name="widget_text_primary">@android:color/system_neutral1_900</color>
+    <color name="widget_text_secondary">@android:color/system_accent1_700</color>
+    <color name="widget_badge_bg">@android:color/system_accent1_100</color>
+    <color name="widget_badge_text">@android:color/system_accent1_800</color>
+    <color name="widget_accent">@android:color/system_accent1_700</color>
+
+    <color name="widget_bg_expressive">@android:color/system_accent1_100</color>
+    <color name="widget_bg_expressive_stroke">@android:color/system_accent1_200</color>
+    <color name="widget_expressive_text">@android:color/system_accent1_900</color>
+    <color name="widget_expressive_secondary">@android:color/system_accent1_700</color>
+    <color name="widget_expressive_badge_bg">@android:color/system_accent1_600</color>
+    <color name="widget_expressive_badge_text">@android:color/system_neutral1_0</color>
+
+    <color name="widget_bg_contrast">@android:color/system_neutral1_0</color>
+    <color name="widget_bg_contrast_stroke">@android:color/system_neutral2_200</color>
+    <color name="widget_contrast_text">@android:color/system_neutral1_1000</color>
+    <color name="widget_contrast_secondary">@android:color/system_accent1_700</color>
+
+    <color name="widget_bg_translucent">#DCF8F7F4</color>
+    <color name="widget_bg_translucent_stroke">@android:color/system_accent1_200</color>
+</resources>

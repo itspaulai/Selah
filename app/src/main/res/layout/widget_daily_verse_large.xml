@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_widget_tonal">
+
+    <ImageView
+        android:id="@+id/widget_text_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        android:scaleType="fitCenter"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/widget_content_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/widget_verse_text_serif"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/newsreader"
+                android:includeFontPadding="false"
+                android:lineSpacingMultiplier="1.0"
+                android:text="Peace I leave with you. My peace I give to you; not as the world gives, I give to you. Don’t let your heart be troubled, neither let it be fearful."
+                android:textColor="@color/widget_text_primary"
+                android:textSize="18dp"
+                android:visibility="gone"
+                tools:ignore="SpUsage"
+                tools:targetApi="o" />
+
+            <TextView
+                android:id="@+id/widget_verse_text_sans"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/google_sans_flex"
+                android:includeFontPadding="false"
+                android:lineSpacingMultiplier="1.0"
+                android:text="Peace I leave with you. My peace I give to you; not as the world gives, I give to you. Don’t let your heart be troubled, neither let it be fearful."
+                android:textColor="@color/widget_text_primary"
+                android:textSize="17dp"
+                tools:ignore="SpUsage"
+                tools:targetApi="o" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/widget_reference"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/google_sans_flex"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:text="John 14:27"
+            android:textColor="@color/widget_text_secondary"
+            android:textSize="13dp"
+            android:textStyle="bold"
+            tools:ignore="SpUsage"
+            tools:targetApi="o" />
+    </LinearLayout>
+</FrameLayout>
