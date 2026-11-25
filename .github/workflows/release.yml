@@ -1,0 +1,125 @@
+name: Release APK
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Release version tag (e.g. v1.0.0)'
+        required: true
+        default: 'v1.0.0'
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    name: Test, Build APK & Publish Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Set up Gradle 9.3.1
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.3.1'
+
+      - name: Resolve release tag
+        id: tag
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_TAG: ${{ inputs.tag_name }}
+        run: |
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            TAG="$INPUT_TAG"
+          else
+            TAG="$GITHUB_REF_NAME"
+          fi
+          if [[ ! "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([-.][A-Za-z0-9.]+)?$ ]]; then
+            echo "Invalid version tag format: $TAG (expected e.g. v1.0.0)" >&2
+            exit 1
+          fi
+          echo "name=${TAG}" >> "$GITHUB_OUTPUT"
+
+      - name: Prepare debug keystore for tests and fallback APK
+        shell: bash
+        run: |
+          if [ -f debug.keystore.base64 ] && [ ! -f debug.keystore ]; then
+            base64 --decode debug.keystore.base64 > debug.keystore
+          elif [ ! -f debug.keystore ]; then
+            keytool -genkeypair -v -keystore debug.keystore \
+              -storepass android -alias androiddebugkey -keypass android \
+              -keyalg RSA -keysize 2048 -validity 10000 \
+              -dname "CN=Android Debug,O=Android,C=US"
+          fi
+
+      - name: Run Robolectric unit tests
+        run: gradle :app:testDebugUnitTest --no-daemon
+
+      - name: Build APK (Signed Release if secrets exist, otherwise installable APK)
+        id: build_apk
+        shell: bash
+        env:
+          RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          TAG="${{ steps.tag.outputs.name }}"
+          mkdir -p release-artifacts
+
+          if [ -n "$RELEASE_KEYSTORE_BASE64" ] && [ -n "$STORE_PASSWORD" ] && [ -n "$KEY_PASSWORD" ]; then
+            echo "Production release keystore secrets detected — building signed Release APK."
+            echo "$RELEASE_KEYSTORE_BASE64" | base64 --decode > "${RUNNER_TEMP}/my-upload-key.jks"
+            export KEYSTORE_PATH="${RUNNER_TEMP}/my-upload-key.jks"
+            gradle :app:assembleRelease --no-daemon
+            APK_NAME="Selah-${TAG}-release.apk"
+            cp app/build/outputs/apk/release/app-release.apk "release-artifacts/${APK_NAME}"
+            echo "variant=Release (signed)" >> "$GITHUB_OUTPUT"
+          else
+            echo "No release keystore secrets configured — building installable Debug-signed APK."
+            gradle :app:assembleDebug --no-daemon
+            APK_NAME="Selah-${TAG}.apk"
+            cp app/build/outputs/apk/debug/app-debug.apk "release-artifacts/${APK_NAME}"
+            echo "variant=Installable APK" >> "$GITHUB_OUTPUT"
+          fi
+
+          (cd release-artifacts && sha256sum "${APK_NAME}" > SHA256SUMS.txt)
+          echo "apk_name=${APK_NAME}" >> "$GITHUB_OUTPUT"
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.name }}
+          name: Selah ${{ steps.tag.outputs.name }}
+          generate_release_notes: true
+          body: |
+            ## Selah ${{ steps.tag.outputs.name }}
+
+            **Daily Bible Verse & Material 3 Expressive Home Screen Widget for Android**
+
+            - **Build type:** ${{ steps.build_apk.outputs.variant }}
+            - **Requirements:** Android 7.0+ (API 24+) · Material You dynamic colors on Android 12+
+            - **Permissions:** None (100% offline, zero ads, zero tracking)
+
+            ### How to Install
+            1. Download `${{ steps.build_apk.outputs.apk_name }}` from **Assets** below.
+            2. Open the downloaded file on your Android device to install.
+            3. Long-press your home screen → **Widgets** → **Selah**, or open **Widget Studio** inside the app to customize all 29 Material 3 Expressive shapes and pin with one tap.
+          files: |
+            release-artifacts/${{ steps.build_apk.outputs.apk_name }}
+            release-artifacts/SHA256SUMS.txt
