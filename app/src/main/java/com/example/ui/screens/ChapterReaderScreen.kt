@@ -54,16 +54,18 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.R
+import com.example.model.AppLanguage
 import com.example.model.BibleTranslation
 import com.example.model.DailyVerse
-import com.example.ui.theme.NewsreaderFontFamily
-import com.example.ui.theme.PlusJakartaSansFontFamily
+import com.example.ui.theme.bodySansFontFamily
+import com.example.ui.theme.editorialSerifFontFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChapterReaderScreen(
     verse: DailyVerse,
     translation: BibleTranslation,
+    appLanguage: AppLanguage,
     isFavorite: Boolean,
     onBack: () -> Unit,
     onOpenTranslationPicker: () -> Unit,
@@ -75,6 +77,14 @@ fun ChapterReaderScreen(
     BackHandler(onBack = onBack)
 
     val chapterVerses = verse.chapterFor(translation)
+    val translationSans = bodySansFontFamily(translation.language)
+    val mixedSans = bodySansFontFamily(
+        if (appLanguage == AppLanguage.BULGARIAN || translation.language == AppLanguage.BULGARIAN) {
+            AppLanguage.BULGARIAN
+        } else {
+            appLanguage
+        }
+    )
 
     Scaffold(
         modifier = modifier
@@ -85,8 +95,10 @@ fun ChapterReaderScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "${verse.book} ${verse.chapter}",
-                        style = MaterialTheme.typography.titleLarge
+                        text = "${verse.bookFor(translation)} ${verse.chapter}",
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontFamily = translationSans
+                        )
                     )
                 },
                 navigationIcon = {
@@ -117,13 +129,15 @@ fun ChapterReaderScreen(
                         ) {
                             Text(
                                 text = translation.code,
-                                style = MaterialTheme.typography.labelLarge,
+                                style = MaterialTheme.typography.labelLarge.copy(
+                                    fontFamily = translationSans
+                                ),
                                 color = MaterialTheme.colorScheme.onSecondaryContainer
                             )
                             Spacer(modifier = Modifier.width(2.dp))
                             Icon(
                                 imageVector = Icons.Rounded.ExpandMore,
-                                contentDescription = "Switch translation",
+                                contentDescription = stringResource(R.string.cd_change_translation),
                                 tint = MaterialTheme.colorScheme.onSecondaryContainer,
                                 modifier = Modifier.size(16.dp)
                             )
@@ -165,7 +179,9 @@ fun ChapterReaderScreen(
                             modifier = Modifier.size(18.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text(if (isFavorite) "Saved" else "Save")
+                        Text(
+                            stringResource(if (isFavorite) R.string.action_saved else R.string.action_save)
+                        )
                     }
 
                     FilledTonalButton(
@@ -228,7 +244,7 @@ fun ChapterReaderScreen(
                             color = MaterialTheme.colorScheme.primaryContainer
                         ) {
                             Text(
-                                text = verse.theme.label,
+                                text = stringResource(verse.theme.labelRes),
                                 style = MaterialTheme.typography.labelMedium,
                                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
@@ -236,19 +252,26 @@ fun ChapterReaderScreen(
                         }
                         Text(
                             text = translation.displayName,
-                            style = MaterialTheme.typography.bodySmall,
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                fontFamily = translationSans
+                            ),
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
 
                     Text(
-                        text = verse.chapterHeading,
+                        text = verse.chapterHeadingFor(appLanguage),
                         style = MaterialTheme.typography.displaySmall,
                         color = MaterialTheme.colorScheme.onBackground
                     )
                     Text(
-                        text = "Reading ${verse.reference} in context",
-                        style = MaterialTheme.typography.bodyMedium,
+                        text = stringResource(
+                            R.string.reader_reading_in_context,
+                            verse.referenceFor(translation)
+                        ),
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontFamily = mixedSans
+                        ),
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -280,6 +303,7 @@ fun ChapterReaderScreen(
                                 VerseParagraph(
                                     verseNumber = item.number,
                                     text = item.text,
+                                    language = translation.language,
                                     isFeatured = true
                                 )
                             }
@@ -293,6 +317,7 @@ fun ChapterReaderScreen(
                             VerseParagraph(
                                 verseNumber = item.number,
                                 text = item.text,
+                                language = translation.language,
                                 isFeatured = false
                             )
                         }
@@ -309,6 +334,7 @@ fun ChapterReaderScreen(
 private fun VerseParagraph(
     verseNumber: Int,
     text: String,
+    language: AppLanguage,
     isFeatured: Boolean
 ) {
     val numberColor = if (isFeatured) {
@@ -325,7 +351,7 @@ private fun VerseParagraph(
     val annotated = buildAnnotatedString {
         withStyle(
             SpanStyle(
-                fontFamily = PlusJakartaSansFontFamily,
+                fontFamily = bodySansFontFamily(language),
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
                 color = numberColor,
@@ -336,7 +362,7 @@ private fun VerseParagraph(
         }
         withStyle(
             SpanStyle(
-                fontFamily = NewsreaderFontFamily,
+                fontFamily = editorialSerifFontFamily(language),
                 fontSize = 20.sp,
                 fontWeight = if (isFeatured) FontWeight.Medium else FontWeight.Normal,
                 color = bodyColor

@@ -29,7 +29,17 @@ object WidgetTextRenderer {
 
     const val UNIFIED_LINE_HEIGHT_RATIO = 1.20f
 
-    fun loadVerseTypeface(context: Context, fontStyle: WidgetFontStyle): Typeface {
+    fun loadVerseTypeface(
+        context: Context,
+        fontStyle: WidgetFontStyle,
+        language: com.example.model.AppLanguage = com.example.model.AppLanguage.ENGLISH
+    ): Typeface {
+        if (language == com.example.model.AppLanguage.BULGARIAN) {
+            return when (fontStyle) {
+                WidgetFontStyle.EDITORIAL_SERIF -> Typeface.SERIF
+                WidgetFontStyle.PIXEL_SANS -> Typeface.SANS_SERIF
+            }
+        }
         val fontRes = when (fontStyle) {
             WidgetFontStyle.EDITORIAL_SERIF -> R.font.newsreader
             WidgetFontStyle.PIXEL_SANS -> R.font.google_sans_flex
@@ -38,7 +48,13 @@ object WidgetTextRenderer {
             ?: if (fontStyle == WidgetFontStyle.EDITORIAL_SERIF) Typeface.SERIF else Typeface.SANS_SERIF
     }
 
-    fun loadReferenceTypeface(context: Context): Typeface {
+    fun loadReferenceTypeface(
+        context: Context,
+        language: com.example.model.AppLanguage = com.example.model.AppLanguage.ENGLISH
+    ): Typeface {
+        if (language == com.example.model.AppLanguage.BULGARIAN) {
+            return Typeface.SANS_SERIF
+        }
         return runCatching { ResourcesCompat.getFont(context, R.font.google_sans_flex) }.getOrNull()
             ?: Typeface.SANS_SERIF
     }

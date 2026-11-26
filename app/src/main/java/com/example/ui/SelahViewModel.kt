@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.data.BibleCorpus
 import com.example.data.SelahPreferencesRepository
+import com.example.model.AppLanguage
 import com.example.model.AppThemeMode
 import com.example.model.BibleTranslation
 import com.example.model.DailyVerse
@@ -55,10 +56,16 @@ data class SelahUiState(
             }
             val query = searchQuery.trim()
             if (query.isEmpty()) return base
+            val appLang = preferences.appLanguage
+            val transLang = preferences.translation.language
             return base.filter { verse ->
                 verse.reference.contains(query, ignoreCase = true) ||
+                    verse.referenceFor(appLang).contains(query, ignoreCase = true) ||
+                    verse.referenceFor(transLang).contains(query, ignoreCase = true) ||
                     verse.book.contains(query, ignoreCase = true) ||
+                    verse.bookFor(appLang).contains(query, ignoreCase = true) ||
                     verse.chapterHeading.contains(query, ignoreCase = true) ||
+                    verse.chapterHeadingFor(appLang).contains(query, ignoreCase = true) ||
                     verse.theme.label.contains(query, ignoreCase = true) ||
                     verse.textFor(preferences.translation).contains(query, ignoreCase = true)
             }
@@ -103,8 +110,8 @@ class SelahViewModel(application: Application) : AndroidViewModel(application) {
     ) { prefs, local ->
         SelahUiState(
             todayVerse = BibleCorpus.getDailyVerse(),
-            todayDateFull = BibleCorpus.formattedDateFull(),
-            todayDateShort = BibleCorpus.formattedDateShort(),
+            todayDateFull = BibleCorpus.formattedDateFull(language = prefs.appLanguage),
+            todayDateShort = BibleCorpus.formattedDateShort(language = prefs.appLanguage),
             preferences = prefs,
             allVerses = BibleCorpus.verses,
             searchQuery = local.searchQuery,
@@ -122,6 +129,13 @@ class SelahViewModel(application: Application) : AndroidViewModel(application) {
     init {
         DailyVerseScheduler.scheduleDailyRefresh(application.applicationContext)
         SelahWidgetUpdater.updateAllWidgetsAsync(application.applicationContext)
+    }
+
+    fun setAppLanguage(language: AppLanguage) {
+        viewModelScope.launch {
+            repository.setAppLanguage(language, autoSwitchTranslation = true)
+            SelahWidgetUpdater.updateAllWidgets(getApplication())
+        }
     }
 
     fun selectTranslation(translation: BibleTranslation) {

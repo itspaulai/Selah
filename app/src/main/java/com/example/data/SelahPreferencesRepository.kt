@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.model.AppLanguage
 import com.example.model.AppThemeMode
 import com.example.model.BibleTranslation
 import com.example.model.SelahPreferences
@@ -26,6 +27,7 @@ private val Context.selahDataStore: DataStore<Preferences> by preferencesDataSto
 class SelahPreferencesRepository(private val context: Context) {
 
     private object Keys {
+        val APP_LANGUAGE = stringPreferencesKey("app_language")
         val TRANSLATION = stringPreferencesKey("translation")
         val FAVORITE_IDS = stringSetPreferencesKey("favorite_verse_ids")
         val WIDGET_SHAPE = stringPreferencesKey("widget_shape")
@@ -37,8 +39,10 @@ class SelahPreferencesRepository(private val context: Context) {
     }
 
     val preferencesFlow: Flow<SelahPreferences> = context.selahDataStore.data.map { prefs ->
+        val language = AppLanguage.fromId(prefs[Keys.APP_LANGUAGE])
         SelahPreferences(
-            translation = BibleTranslation.fromCode(prefs[Keys.TRANSLATION]),
+            appLanguage = language,
+            translation = BibleTranslation.fromCode(prefs[Keys.TRANSLATION], language),
             favoriteVerseIds = prefs[Keys.FAVORITE_IDS] ?: emptySet(),
             widgetShape = WidgetShape.fromId(prefs[Keys.WIDGET_SHAPE]),
             widgetColorStyle = WidgetColorStyle.fromId(prefs[Keys.WIDGET_COLOR_STYLE]),
@@ -51,8 +55,20 @@ class SelahPreferencesRepository(private val context: Context) {
 
     suspend fun getSnapshot(): SelahPreferences = preferencesFlow.first()
 
+    suspend fun setAppLanguage(language: AppLanguage, autoSwitchTranslation: Boolean = true) {
+        context.selahDataStore.edit { prefs ->
+            prefs[Keys.APP_LANGUAGE] = language.id
+            if (autoSwitchTranslation) {
+                val current = BibleTranslation.fromCode(prefs[Keys.TRANSLATION], language)
+                if (current.language != language) {
+                    prefs[Keys.TRANSLATION] = language.defaultTranslation.name
+                }
+            }
+        }
+    }
+
     suspend fun setTranslation(translation: BibleTranslation) {
-        context.selahDataStore.edit { it[Keys.TRANSLATION] = translation.code }
+        context.selahDataStore.edit { it[Keys.TRANSLATION] = translation.name }
     }
 
     suspend fun toggleFavorite(verseId: String): Boolean {

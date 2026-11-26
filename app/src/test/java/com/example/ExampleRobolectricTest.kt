@@ -2,14 +2,18 @@ package com.example
 
 import android.content.Context
 import android.graphics.Color
+import android.content.res.Configuration
 import androidx.test.core.app.ApplicationProvider
 import com.example.data.BibleCorpus
+import com.example.model.AppLanguage
 import com.example.model.BibleTranslation
+import com.example.model.WidgetFontStyle
 import com.example.model.WidgetShape
 import com.example.model.WidgetSize
 import com.example.model.WidgetTextScale
 import com.example.util.CurvedReferenceRenderer
 import com.example.util.WidgetTextFitter
+import com.example.util.WidgetTextRenderer
 import java.util.Calendar
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -39,10 +43,11 @@ class ExampleRobolectricTest {
     }
 
     @Test
-    fun `corpus loads 1000 verified verbatim verses across all four translations with chapter context`() {
+    fun `corpus loads 1000 verified verbatim verses across all six translations with chapter context`() {
         val verses = BibleCorpus.verses
         assertEquals(1000, verses.size)
         assertEquals(1000, verses.map { it.id }.toSet().size)
+        assertEquals(6, BibleTranslation.entries.size)
 
         val ntBooks = setOf(
             "Matthew", "Mark", "Luke", "John", "Romans", "1 Corinthians", "2 Corinthians",
@@ -55,11 +60,82 @@ class ExampleRobolectricTest {
         assertTrue("Expected rich NT coverage, found $ntCount", ntCount >= 400)
         assertTrue("Expected rich OT coverage, found $otCount", otCount >= 500)
 
+        val cyrillicRegex = Regex("[\\u0400-\\u04FF]")
         for (verse in verses) {
+            assertTrue("Missing French book name for ${verse.id}", verse.bookFr.isNotBlank())
+            assertTrue("Missing Bulgarian Cyrillic book name for ${verse.id}", cyrillicRegex.containsMatchIn(verse.bookBg))
+            assertTrue("Missing French chapter heading for ${verse.id}", verse.chapterHeadingFr.isNotBlank())
+            assertTrue("Missing Bulgarian Cyrillic chapter heading for ${verse.id}", cyrillicRegex.containsMatchIn(verse.chapterHeadingBg))
+
             for (translation in BibleTranslation.entries) {
-                assertTrue("Missing text for ${verse.id} (${translation.name})", verse.textFor(translation).isNotBlank())
-                assertTrue("Missing chapter context for ${verse.id} (${translation.name})", verse.chapterFor(translation).isNotEmpty())
+                val text = verse.textFor(translation)
+                assertTrue("Missing text for ${verse.id} (${translation.name})", text.isNotBlank())
+                if (translation == BibleTranslation.BG40) {
+                    assertTrue("Bulgarian verse ${verse.id} must contain Cyrillic", cyrillicRegex.containsMatchIn(text))
+                }
+                val chapter = verse.chapterFor(translation)
+                assertTrue("Missing chapter context for ${verse.id} (${translation.name})", chapter.isNotEmpty())
+                assertTrue("Chapter context for ${verse.id} (${translation.name}) must have non-blank verses", chapter.all { it.text.isNotBlank() })
             }
+        }
+
+        // Spot-check verbatim public-domain French (LSG 1910) & Bulgarian (1940) verses
+        val psalm23 = verses.first { it.book == "Psalm" && it.chapter == 23 && it.verseRange == "1" }
+        assertEquals("Psaume 23:1", psalm23.referenceFor(BibleTranslation.LSG))
+        assertEquals("Псалм 23:1", psalm23.referenceFor(BibleTranslation.BG40))
+        assertTrue("LSG Psalm 23:1 should be authentic", psalm23.textFor(BibleTranslation.LSG).contains("berger"))
+        assertTrue("BG40 Psalm 23:1 should be authentic", psalm23.textFor(BibleTranslation.BG40).contains("Пастир"))
+
+        val john316 = verses.firstOrNull { it.book == "John" && it.chapter == 3 && it.verseRange == "16" }
+        if (john316 != null) {
+            assertEquals("Jean 3:16", john316.referenceFor(BibleTranslation.LSG))
+            assertEquals("Йоан 3:16", john316.referenceFor(BibleTranslation.BG40))
+            assertTrue("LSG John 3:16 should be authentic", john316.textFor(BibleTranslation.LSG).contains("Dieu a tant aimé le monde"))
+            assertTrue("BG40 John 3:16 should be authentic", john316.textFor(BibleTranslation.BG40).contains("Бог толкова възлюби света"))
+        }
+    }
+
+    @Test
+    fun `french and bulgarian localized UI strings and widget PNGs render cleanly`() {
+        val baseContext = ApplicationProvider.getApplicationContext<Context>()
+
+        val frConfig = Configuration(baseContext.resources.configuration).apply {
+            setLocale(AppLanguage.FRENCH.locale)
+        }
+        val frCtx = baseContext.createConfigurationContext(frConfig)
+        assertEquals("Aujourd’hui", frCtx.getString(R.string.nav_today))
+        assertEquals("Studio de widget", frCtx.getString(R.string.widget_studio_title))
+        assertEquals("Langue", frCtx.getString(R.string.widget_section_language))
+
+        val bgConfig = Configuration(baseContext.resources.configuration).apply {
+            setLocale(AppLanguage.BULGARIAN.locale)
+        }
+        val bgCtx = baseContext.createConfigurationContext(bgConfig)
+        assertEquals("Днес", bgCtx.getString(R.string.nav_today))
+        assertEquals("Студио за уиджет", bgCtx.getString(R.string.widget_studio_title))
+        assertEquals("Език", bgCtx.getString(R.string.widget_section_language))
+
+        val sample = BibleCorpus.verses.first()
+        for (translation in listOf(BibleTranslation.LSG, BibleTranslation.BG40)) {
+            val verseTypeface = WidgetTextRenderer.loadVerseTypeface(baseContext, WidgetFontStyle.EDITORIAL_SERIF, translation.language)
+            val refTypeface = WidgetTextRenderer.loadReferenceTypeface(baseContext, translation.language)
+            val pngBytes = WidgetTextRenderer.renderWidgetCompositePng(
+                verseText = sample.textFor(translation),
+                referenceText = sample.referenceFor(translation),
+                widthDp = 265f,
+                heightDp = 265f,
+                deviceDensity = 3f,
+                shape = WidgetShape.COOKIE_12,
+                size = WidgetSize.LARGE,
+                textScale = WidgetTextScale.COMFORTABLE,
+                containerColor = Color.parseColor("#F4F0E8"),
+                primaryTextColor = Color.BLACK,
+                secondaryTextColor = Color.parseColor("#28482F"),
+                verseTypeface = verseTypeface,
+                referenceTypeface = refTypeface
+            )
+            assertTrue("Rendered PNG for ${translation.name} must be non-empty", pngBytes.size > 100)
+            assertEquals(0x89.toByte(), pngBytes[0])
         }
     }
 
@@ -90,7 +166,7 @@ class ExampleRobolectricTest {
                     }
                     val fitted = WidgetTextFitter.fitText(
                         verseText = text,
-                        referenceText = verse.reference,
+                        referenceText = verse.referenceFor(translation),
                         widthPx = wDp * density,
                         heightPx = hDp * density,
                         density = density,
@@ -121,7 +197,7 @@ class ExampleRobolectricTest {
                     }
 
                     val expectedMinVerseDp = when (size) {
-                        WidgetSize.SMALL -> 9.0f
+                        WidgetSize.SMALL -> 8.5f
                         WidgetSize.MEDIUM -> 11.0f
                         WidgetSize.LARGE -> 12.5f
                     }

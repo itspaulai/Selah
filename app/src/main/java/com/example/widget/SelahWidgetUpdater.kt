@@ -248,21 +248,29 @@ object SelahWidgetUpdater {
         val views = RemoteViews(context.packageName, layoutRes)
 
         val verseText = verse.textFor(prefs.translation)
+        val localizedRef = verse.referenceFor(prefs.translation)
         val palette = resolvePalette(context, prefs.widgetColorStyle)
 
         // Clear root background so the borderless Material 3 Expressive shape renders directly
         // over the user's wallpaper with zero rectangular backing or border lines.
         views.setInt(R.id.widget_root, "setBackgroundColor", Color.TRANSPARENT)
 
-        // Render both the exact Material 3 Expressive shape fill and the bundled Google Sans Flex /
-        // Newsreader typography into a single transparent PNG so Home Screen and Widget Studio
-        // match 100% pixel-for-pixel across all 29 shapes and every Android launcher.
+        // Render both the exact Material 3 Expressive shape fill and typography into a single
+        // transparent PNG so Home Screen and Widget Studio match 100% pixel-for-pixel across
+        // all 29 shapes and every Android launcher.
         val density = context.resources.displayMetrics.density
-        val verseTypeface = WidgetTextRenderer.loadVerseTypeface(context, prefs.widgetFontStyle)
-        val refTypeface = WidgetTextRenderer.loadReferenceTypeface(context)
+        val verseTypeface = WidgetTextRenderer.loadVerseTypeface(
+            context,
+            prefs.widgetFontStyle,
+            prefs.translation.language
+        )
+        val refTypeface = WidgetTextRenderer.loadReferenceTypeface(
+            context,
+            prefs.translation.language
+        )
         val pngBytes = WidgetTextRenderer.renderWidgetCompositePng(
             verseText = verseText,
-            referenceText = verse.reference,
+            referenceText = localizedRef,
             widthDp = widthDp,
             heightDp = heightDp,
             deviceDensity = density,
@@ -282,7 +290,7 @@ object SelahWidgetUpdater {
             R.id.widget_text_overlay,
             Icon.createWithData(pngBytes, 0, pngBytes.size)
         )
-        views.setContentDescription(R.id.widget_text_overlay, "$verseText — ${verse.reference}")
+        views.setContentDescription(R.id.widget_text_overlay, "$verseText — $localizedRef")
 
         val launchIntent = Intent(context, MainActivity::class.java).apply {
             action = Intent.ACTION_VIEW

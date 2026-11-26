@@ -45,12 +45,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.R
+import com.example.model.AppLanguage
 import com.example.model.BibleTranslation
 import com.example.model.DailyVerse
 import com.example.model.VerseTheme
 import com.example.ui.LibraryFilter
 import com.example.ui.SelahUiState
-import com.example.ui.theme.NewsreaderFontFamily
+import com.example.ui.theme.bodySansFontFamily
+import com.example.ui.theme.editorialSerifFontFamily
 
 @Composable
 fun LibraryScreen(
@@ -99,7 +101,7 @@ fun LibraryScreen(
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Rounded.Search,
-                            contentDescription = "Search scriptures"
+                            contentDescription = stringResource(R.string.cd_search_scriptures)
                         )
                     },
                     trailingIcon = {
@@ -110,7 +112,7 @@ fun LibraryScreen(
                             ) {
                                 Icon(
                                     imageVector = Icons.Rounded.Close,
-                                    contentDescription = "Clear search"
+                                    contentDescription = stringResource(R.string.cd_clear_search)
                                 )
                             }
                         }
@@ -174,7 +176,7 @@ fun LibraryScreen(
                     FilterChip(
                         selected = uiState.selectedThemeFilter == theme,
                         onClick = { onSelectTheme(theme) },
-                        label = { Text(theme.label) },
+                        label = { Text(stringResource(theme.labelRes)) },
                         shape = CircleShape,
                         modifier = Modifier.testTag("library_filter_theme_${theme.name.lowercase()}")
                     )
@@ -197,6 +199,7 @@ fun LibraryScreen(
                         VerseLibraryCard(
                             verse = verse,
                             translation = uiState.preferences.translation,
+                            appLanguage = uiState.preferences.appLanguage,
                             isToday = verse.id == uiState.todayVerse.id,
                             isFavorite = verse.id in uiState.preferences.favoriteVerseIds,
                             onClick = { onOpenVerse(verse.id) },
@@ -214,6 +217,7 @@ fun LibraryScreen(
 private fun VerseLibraryCard(
     verse: DailyVerse,
     translation: BibleTranslation,
+    appLanguage: AppLanguage,
     isToday: Boolean,
     isFavorite: Boolean,
     onClick: () -> Unit,
@@ -256,8 +260,10 @@ private fun VerseLibraryCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = verse.reference,
-                        style = MaterialTheme.typography.titleMedium,
+                        text = verse.referenceFor(translation),
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontFamily = bodySansFontFamily(translation.language)
+                        ),
                         color = MaterialTheme.colorScheme.primary
                     )
                     if (isToday) {
@@ -266,7 +272,7 @@ private fun VerseLibraryCard(
                             color = MaterialTheme.colorScheme.primary
                         ) {
                             Text(
-                                text = "Today",
+                                text = stringResource(R.string.library_badge_today),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onPrimary,
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
@@ -278,7 +284,7 @@ private fun VerseLibraryCard(
                             color = MaterialTheme.colorScheme.surfaceContainerHighest
                         ) {
                             Text(
-                                text = verse.theme.label,
+                                text = stringResource(verse.theme.labelRes),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.padding(horizontal = 9.dp, vertical = 3.dp)
@@ -312,7 +318,7 @@ private fun VerseLibraryCard(
 
             Text(
                 text = verse.textFor(translation),
-                fontFamily = NewsreaderFontFamily,
+                fontFamily = editorialSerifFontFamily(translation.language),
                 fontSize = 18.sp,
                 lineHeight = 27.sp,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -321,9 +327,16 @@ private fun VerseLibraryCard(
                 modifier = Modifier.padding(end = 8.dp)
             )
 
+            val footerFont = bodySansFontFamily(
+                if (appLanguage == AppLanguage.BULGARIAN || translation.language == AppLanguage.BULGARIAN) {
+                    AppLanguage.BULGARIAN
+                } else {
+                    appLanguage
+                }
+            )
             Text(
-                text = "${verse.chapterHeading} · ${translation.code}",
-                style = MaterialTheme.typography.bodySmall,
+                text = "${verse.chapterHeadingFor(appLanguage)} · ${translation.code}",
+                style = MaterialTheme.typography.bodySmall.copy(fontFamily = footerFont),
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }

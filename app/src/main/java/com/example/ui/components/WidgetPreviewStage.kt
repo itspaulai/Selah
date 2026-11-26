@@ -43,6 +43,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
@@ -108,7 +109,7 @@ fun WidgetPreviewStage(
                     color = Color.Black.copy(alpha = 0.24f)
                 ) {
                     Text(
-                        text = "${preferences.widgetShape.label} · ${previewSize.label} ${previewSize.dimensionsLabel}",
+                        text = "${stringResource(preferences.widgetShape.labelRes)} · ${stringResource(previewSize.labelRes)} ${previewSize.dimensionsLabel}",
                         style = MaterialTheme.typography.labelSmall,
                         color = Color.White,
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
@@ -245,6 +246,8 @@ private fun LiveWidgetCard(
 ) {
     val colors = resolvePreviewColors(preferences.widgetColorStyle)
     val verseText = verse.textFor(preferences.translation)
+    val referenceText = verse.referenceFor(preferences.translation)
+    val verseLanguage = preferences.translation.language
     val resolvedShape = remember(widgetShape, size) {
         M3ExpressiveComposeShape(widgetShape, size)
     }
@@ -270,11 +273,11 @@ private fun LiveWidgetCard(
         val context = LocalContext.current
         val density = LocalDensity.current
 
-        val verseTypeface = remember(context, preferences.widgetFontStyle) {
-            WidgetTextRenderer.loadVerseTypeface(context, preferences.widgetFontStyle)
+        val verseTypeface = remember(context, preferences.widgetFontStyle, verseLanguage) {
+            WidgetTextRenderer.loadVerseTypeface(context, preferences.widgetFontStyle, verseLanguage)
         }
-        val refTypeface = remember(context) {
-            WidgetTextRenderer.loadReferenceTypeface(context)
+        val refTypeface = remember(context, verseLanguage) {
+            WidgetTextRenderer.loadReferenceTypeface(context, verseLanguage)
         }
 
         BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
@@ -283,7 +286,8 @@ private fun LiveWidgetCard(
 
             val fitted = remember(
                 verseText,
-                verse.reference,
+                referenceText,
+                verseLanguage,
                 widthPx,
                 heightPx,
                 widgetShape,
@@ -293,7 +297,7 @@ private fun LiveWidgetCard(
             ) {
                 WidgetTextRenderer.fitForWidget(
                     verseText = verseText,
-                    referenceText = verse.reference,
+                    referenceText = referenceText,
                     widthPx = widthPx,
                     heightPx = heightPx,
                     density = density.density,
@@ -312,7 +316,7 @@ private fun LiveWidgetCard(
             Canvas(
                 modifier = Modifier
                     .fillMaxSize()
-                    .semantics { contentDescription = "$verseText — ${verse.reference}" }
+                    .semantics { contentDescription = "$verseText — $referenceText" }
             ) {
                 drawIntoCanvas { canvas ->
                     WidgetTextRenderer.drawWidgetText(
@@ -321,7 +325,7 @@ private fun LiveWidgetCard(
                         heightPx = this.size.height,
                         density = density.density,
                         fitted = fitted,
-                        referenceText = verse.reference,
+                        referenceText = referenceText,
                         shape = widgetShape,
                         size = size,
                         primaryTextColor = primaryColorArgb,

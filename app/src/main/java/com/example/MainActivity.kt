@@ -4,6 +4,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -38,6 +39,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,6 +48,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -75,14 +78,29 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+            val appLanguage = uiState.preferences.appLanguage
+            val baseContext = LocalContext.current
+            val localizedContext = remember(baseContext, appLanguage) {
+                val config = Configuration(baseContext.resources.configuration).apply {
+                    setLocale(appLanguage.locale)
+                }
+                baseContext.createConfigurationContext(config)
+            }
 
-            SelahTheme(
-                themeMode = uiState.preferences.appThemeMode,
-                dynamicColor = uiState.preferences.useDynamicColor
+            CompositionLocalProvider(
+                LocalContext provides localizedContext,
+                LocalConfiguration provides localizedContext.resources.configuration
             ) {
-                SelahApp(
-                    viewModel = viewModel
-                )
+                SelahTheme(
+                    themeMode = uiState.preferences.appThemeMode,
+                    dynamicColor = uiState.preferences.useDynamicColor,
+                    language = appLanguage
+                ) {
+                    SelahApp(
+                        viewModel = viewModel,
+                        activityContext = this@MainActivity
+                    )
+                }
             }
         }
     }
@@ -129,9 +147,11 @@ private enum class SelahDestination(
 }
 
 @Composable
-private fun SelahApp(viewModel: SelahViewModel) {
+private fun SelahApp(
+    viewModel: SelahViewModel,
+    activityContext: Context
+) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -143,21 +163,22 @@ private fun SelahApp(viewModel: SelahViewModel) {
     val savedMsg = stringResource(R.string.snackbar_saved)
     val removedMsg = stringResource(R.string.snackbar_removed)
     val pinRequestedMsg = stringResource(R.string.widget_pin_requested)
+    val shareChooserTitle = stringResource(R.string.share_chooser_title)
 
     fun copyVerseToClipboard(verse: DailyVerse, translation: BibleTranslation) {
-        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
-        val formatted = "\"${verse.textFor(translation)}\"\n— ${verse.reference} (${translation.code})"
+        val clipboard = activityContext.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+        val formatted = "\"${verse.textFor(translation)}\"\n— ${verse.referenceFor(translation)} (${translation.code})"
         clipboard?.setPrimaryClip(ClipData.newPlainText("Daily Bible Verse", formatted))
         scope.launch { snackbarHostState.showSnackbar(copiedMsg) }
     }
 
     fun shareVerse(verse: DailyVerse, translation: BibleTranslation) {
-        val formatted = "\"${verse.textFor(translation)}\"\n— ${verse.reference} (${translation.code})"
+        val formatted = "\"${verse.textFor(translation)}\"\n— ${verse.referenceFor(translation)} (${translation.code})"
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, formatted)
         }
-        context.startActivity(Intent.createChooser(shareIntent, "Share verse"))
+        activityContext.startActivity(Intent.createChooser(shareIntent, shareChooserTitle))
     }
 
     fun toggleFavoriteWithFeedback(verseId: String) {
@@ -173,6 +194,7 @@ private fun SelahApp(viewModel: SelahViewModel) {
         ChapterReaderScreen(
             verse = activeReaderVerse,
             translation = uiState.preferences.translation,
+            appLanguage = uiState.preferences.appLanguage,
             isFavorite = activeReaderVerse.id in uiState.preferences.favoriteVerseIds,
             onBack = { viewModel.closeReader() },
             onOpenTranslationPicker = { showTranslationSheet = true },
@@ -272,12 +294,13 @@ private fun SelahApp(viewModel: SelahViewModel) {
                                     uiState = uiState,
                                     onSelectPreviewSize = viewModel::selectPreviewSize,
                                     onRequestPinWidget = { size ->
-                                        val ok = SelahWidgetUpdater.requestPinWidget(context, size)
+                                        val ok = SelahWidgetUpdater.requestPinWidget(activityContext, size)
                                         if (ok) {
                                             scope.launch { snackbarHostState.showSnackbar(pinRequestedMsg) }
                                         }
                                         ok
                                     },
+                                    onSelectLanguage = viewModel::setAppLanguage,
                                     onSelectShape = viewModel::setWidgetShape,
                                     onSelectTranslation = viewModel::selectTranslation,
                                     onSelectColorStyle = viewModel::setWidgetColorStyle,
@@ -307,7 +330,9 @@ private fun SelahApp(viewModel: SelahViewModel) {
 
     if (showTranslationSheet) {
         TranslationPickerSheet(
+            selectedLanguage = uiState.preferences.appLanguage,
             selected = uiState.preferences.translation,
+            onSelectLanguage = { viewModel.setAppLanguage(it) },
             onSelect = { viewModel.selectTranslation(it) },
             onDismiss = { showTranslationSheet = false }
         )

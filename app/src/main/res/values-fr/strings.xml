@@ -1,0 +1,150 @@
+<resources>
+    <string name="app_name">Selah</string>
+
+    <!-- Navigation -->
+    <string name="nav_today">Aujourd\u2019hui</string>
+    <string name="nav_widget">Widget</string>
+    <string name="nav_library">Bibliothèque</string>
+
+    <!-- Widget Provider Labels & Descriptions -->
+    <string name="widget_small_label">Selah · Petit (2×2)</string>
+    <string name="widget_small_description">Verset biblique du jour compact aux couleurs Material You.</string>
+    <string name="widget_medium_label">Selah · Moyen (4×2)</string>
+    <string name="widget_medium_description">Verset biblique du jour équilibré aux couleurs adaptatives.</string>
+    <string name="widget_large_label">Selah · Grand (4×4)</string>
+    <string name="widget_large_description">Verset biblique du jour spacieux aux formes expressives.</string>
+
+    <!-- Today Screen -->
+    <string name="today_badge">Verset du jour</string>
+    <string name="action_read_chapter">Lire en contexte</string>
+    <string name="action_favorite_add">Enregistrer le verset</string>
+    <string name="action_favorite_remove">Retirer des favoris</string>
+    <string name="action_save">Enregistrer</string>
+    <string name="action_saved">Enregistré</string>
+    <string name="action_share">Partager</string>
+    <string name="action_copy">Copier</string>
+    <string name="share_chooser_title">Partager le verset</string>
+    <string name="snackbar_copied">Verset copié dans le presse-papiers</string>
+    <string name="snackbar_saved">Ajouté à vos favoris</string>
+    <string name="snackbar_removed">Retiré de vos favoris</string>
+    <string name="today_widget_promo_title">Widget d\u2019écran d\u2019accueil</string>
+    <string name="today_widget_promo_subtitle">Se met à jour chaque jour avec les couleurs de votre fond d\u2019écran.</string>
+    <string name="today_widget_promo_action">Personnaliser</string>
+    <string name="today_footer_note">Hors ligne · Privé · Actualisé chaque matin</string>
+    <string name="today_reflection_label">Un moment de calme</string>
+
+    <!-- Widget Studio -->
+    <string name="widget_studio_title">Studio de widget</string>
+    <string name="widget_size_small">Petit</string>
+    <string name="widget_size_medium">Moyen</string>
+    <string name="widget_size_large">Grand</string>
+    <string name="widget_add_button">Ajouter le widget %1$s à l\u2019écran d\u2019accueil</string>
+    <string name="widget_pin_requested">Fenêtre d\u2019ajout ouverte — placez le widget sur votre écran d\u2019accueil.</string>
+    <string name="widget_pin_manual_title">Ajouter depuis votre écran d\u2019accueil</string>
+    <string name="widget_pin_manual_body">Votre lanceur ne prend pas en charge l\u2019ajout en un geste. Maintenez appuyé un espace vide de votre écran d\u2019accueil, choisissez Widgets, puis sélectionnez Selah (Petit, Moyen ou Grand).</string>
+    <string name="widget_section_language">Langue</string>
+    <string name="widget_section_language_subtitle">Interface de l\u2019application et versets bibliques</string>
+    <string name="widget_section_shape">Forme du widget</string>
+    <string name="widget_shape_all_button">Les %1$d</string>
+    <string name="widget_shape_gallery_title">Formes expressives</string>
+    <string name="widget_shape_gallery_subtitle">Choisissez parmi %1$d formes Material 3 pour votre verset du jour</string>
+    <string name="widget_section_translation">Traduction biblique</string>
+    <string name="widget_section_surface">Surface du widget</string>
+    <string name="widget_section_typography">Typographie et taille</string>
+    <string name="widget_section_theme">Thème de l\u2019application</string>
+    <string name="toggle_dynamic_color">Couleurs dynamiques du fond d\u2019écran</string>
+    <string name="toggle_dynamic_color_desc">S\u2019adapte à la palette de votre fond d\u2019écran (Android 12+)</string>
+
+    <!-- Surface styles -->
+    <string name="surface_dynamic_tonal_label">Tonal dynamique</string>
+    <string name="surface_dynamic_tonal_desc">Surface douce au contraste équilibré</string>
+    <string name="surface_dynamic_expressive_label">Accent expressif</string>
+    <string name="surface_dynamic_expressive_desc">Teinte riche inspirée de Material You</string>
+    <string name="surface_high_contrast_label">Contraste net</string>
+    <string name="surface_high_contrast_desc">Surface épurée à haute lisibilité</string>
+    <string name="surface_soft_glass_label">Verre translucide</string>
+    <string name="surface_soft_glass_desc">Voile givré délicat sur le fond d\u2019écran</string>
+
+    <!-- Font styles & Text scales -->
+    <string name="font_pixel_sans_label">Pixel Sans</string>
+    <string name="font_pixel_sans_desc">Sans-serif moderne · assortie aux widgets Pixel</string>
+    <string name="font_editorial_serif_label">Serif éditorial</string>
+    <string name="font_editorial_serif_desc">Police classique à empattements</string>
+    <string name="scale_compact">Compact</string>
+    <string name="scale_comfortable">Équilibré</string>
+    <string name="scale_large">Grand</string>
+
+    <!-- App Theme modes -->
+    <string name="theme_system">Système</string>
+    <string name="theme_light">Clair</string>
+    <string name="theme_dark">Sombre</string>
+
+    <!-- Themes -->
+    <string name="verse_theme_peace">Paix</string>
+    <string name="verse_theme_strength">Force</string>
+    <string name="verse_theme_wisdom">Sagesse</string>
+    <string name="verse_theme_hope">Espérance</string>
+    <string name="verse_theme_love">Amour</string>
+    <string name="verse_theme_gratitude">Gratitude</string>
+
+    <!-- 29 Material 3 Expressive Shape Names -->
+    <string name="shape_circle">Cercle</string>
+    <string name="shape_square">Carré</string>
+    <string name="shape_slanted">Incliné</string>
+    <string name="shape_arch">Arche</string>
+    <string name="shape_semicircle">Demi-cercle</string>
+    <string name="shape_oval">Ovale</string>
+    <string name="shape_pill">Pilule</string>
+    <string name="shape_triangle">Triangle</string>
+    <string name="shape_arrow">Flèche</string>
+    <string name="shape_fan">Éventail</string>
+    <string name="shape_diamond">Losange</string>
+    <string name="shape_clamshell">Coquille</string>
+    <string name="shape_pentagon">Pentagone</string>
+    <string name="shape_gem">Gemme</string>
+    <string name="shape_very_sunny">Soleil vif</string>
+    <string name="shape_sunny">Soleil</string>
+    <string name="shape_cookie_4">Biscuit 4 côtés</string>
+    <string name="shape_cookie_6">Biscuit 6 côtés</string>
+    <string name="shape_cookie_7">Biscuit 7 côtés</string>
+    <string name="shape_cookie_9">Biscuit 9 côtés</string>
+    <string name="shape_cookie_12">Biscuit 12 côtés</string>
+    <string name="shape_clover_4">Trèfle à 4 feuilles</string>
+    <string name="shape_clover_8">Trèfle à 8 feuilles</string>
+    <string name="shape_burst">Éclat</string>
+    <string name="shape_soft_burst">Éclat doux</string>
+    <string name="shape_flower">Fleur</string>
+    <string name="shape_puffy">Nuage</string>
+    <string name="shape_ghostish">Fantôme</string>
+    <string name="shape_bun">Brioche</string>
+
+    <!-- Library -->
+    <string name="library_title">Bibliothèque</string>
+    <string name="library_search_hint">Rechercher des versets, livres ou thèmes</string>
+    <string name="library_filter_all">Tous</string>
+    <string name="library_filter_saved">Favoris</string>
+    <string name="library_badge_today">Aujourd\u2019hui</string>
+    <string name="library_empty_saved_title">Aucun verset enregistré</string>
+    <string name="library_empty_saved_body">Touchez le cœur sur un verset du jour ou un chapitre pour le garder près de vous.</string>
+    <string name="library_empty_search_title">Aucun verset trouvé</string>
+    <string name="library_empty_search_body">Essayez de rechercher un livre comme Psaume, Proverbes, ou un mot comme paix ou force.</string>
+
+    <!-- Reader -->
+    <string name="reader_back">Retour</string>
+    <string name="reader_highlighted_note">Verset mis en avant</string>
+    <string name="reader_reading_in_context">Lecture de %1$s en contexte</string>
+    <string name="reader_translation_sheet_title">Choisir une traduction</string>
+    <string name="reader_translation_sheet_subtitle">S\u2019applique à l\u2019application et à vos widgets d\u2019écran d\u2019accueil.</string>
+
+    <!-- Content descriptions -->
+    <string name="cd_change_translation">Changer de traduction biblique</string>
+    <string name="cd_about_selah">À propos de Selah</string>
+    <string name="cd_search_scriptures">Rechercher dans les Écritures</string>
+    <string name="cd_clear_search">Effacer la recherche</string>
+    <string name="cd_selected">Sélectionné</string>
+
+    <!-- About / Privacy -->
+    <string name="about_title">À propos de Selah</string>
+    <string name="about_body">Selah est une application biblique quotidienne, calme et open source, conçue pour la confidentialité et la sérénité.\n\n• 100 % hors ligne — aucune autorisation Internet requise\n• Aucun compte, aucun suivi, aucune publicité\n• Traductions du domaine public : Louis Segond 1910 (LSG), Библия 1940 (ББ40), World English Bible (WEB), King James Version (KJV), American Standard Version (ASV) et Bible in Basic English (BBE)\n• Mise à jour quotidienne automatique du widget aux couleurs Material You</string>
+    <string name="action_close">Fermer</string>
+</resources>

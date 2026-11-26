@@ -1,0 +1,150 @@
+<resources>
+    <string name="app_name">Selah</string>
+
+    <!-- Navigation -->
+    <string name="nav_today">Днес</string>
+    <string name="nav_widget">Уиджет</string>
+    <string name="nav_library">Библиотека</string>
+
+    <!-- Widget Provider Labels & Descriptions -->
+    <string name="widget_small_label">Selah · Малък (2×2)</string>
+    <string name="widget_small_description">Компактен библейски стих на деня с цветове Material You.</string>
+    <string name="widget_medium_label">Selah · Среден (4×2)</string>
+    <string name="widget_medium_description">Балансиран библейски стих на деня с адаптивни цветове.</string>
+    <string name="widget_large_label">Selah · Голям (4×4)</string>
+    <string name="widget_large_description">Просторен библейски стих на деня с изразителни форми.</string>
+
+    <!-- Today Screen -->
+    <string name="today_badge">Стих на деня</string>
+    <string name="action_read_chapter">Прочети в контекст</string>
+    <string name="action_favorite_add">Запази стиха</string>
+    <string name="action_favorite_remove">Премахни от любими</string>
+    <string name="action_save">Запази</string>
+    <string name="action_saved">Запазено</string>
+    <string name="action_share">Сподели</string>
+    <string name="action_copy">Копирай</string>
+    <string name="share_chooser_title">Сподели стиха</string>
+    <string name="snackbar_copied">Стихът е копиран в клипборда</string>
+    <string name="snackbar_saved">Добавено в любими</string>
+    <string name="snackbar_removed">Премахнато от любими</string>
+    <string name="today_widget_promo_title">Уиджет на началния екран</string>
+    <string name="today_widget_promo_subtitle">Обновява се автоматично всеки ден според цветовете на тапета ви.</string>
+    <string name="today_widget_promo_action">Настрой</string>
+    <string name="today_footer_note">Офлайн · Поверително · Обновява се всяка сутрин</string>
+    <string name="today_reflection_label">Миг на тишина</string>
+
+    <!-- Widget Studio -->
+    <string name="widget_studio_title">Студио за уиджет</string>
+    <string name="widget_size_small">Малък</string>
+    <string name="widget_size_medium">Среден</string>
+    <string name="widget_size_large">Голям</string>
+    <string name="widget_add_button">Добави %1$s уиджет на началния екран</string>
+    <string name="widget_pin_requested">Прозорецът за добавяне е отворен — поставете уиджета на началния екран.</string>
+    <string name="widget_pin_manual_title">Добавете уиджет от началния екран</string>
+    <string name="widget_pin_manual_body">Вашият начален екран не поддържа добавяне с едно докосване. Задръжте върху празно място на началния екран, изберете Уиджети и намерете Selah (Малък, Среден или Голям).</string>
+    <string name="widget_section_language">Език</string>
+    <string name="widget_section_language_subtitle">Интерфейс на приложението и библейски стихове</string>
+    <string name="widget_section_shape">Форма на уиджета</string>
+    <string name="widget_shape_all_button">Всички %1$d</string>
+    <string name="widget_shape_gallery_title">Изразителни форми</string>
+    <string name="widget_shape_gallery_subtitle">Изберете от %1$d Material 3 форми за вашия дневен стих</string>
+    <string name="widget_section_translation">Библейски превод</string>
+    <string name="widget_section_surface">Повърхност на уиджета</string>
+    <string name="widget_section_typography">Шрифт и размер</string>
+    <string name="widget_section_theme">Тема на приложението</string>
+    <string name="toggle_dynamic_color">Динамични цветове от тапета</string>
+    <string name="toggle_dynamic_color_desc">Синхронизира се с палитрата на тапета (Android 12+)</string>
+
+    <!-- Surface styles -->
+    <string name="surface_dynamic_tonal_label">Динамичен тон</string>
+    <string name="surface_dynamic_tonal_desc">Мека повърхност с балансиран контраст</string>
+    <string name="surface_dynamic_expressive_label">Изразителен акцент</string>
+    <string name="surface_dynamic_expressive_desc">Наситен Material You цвят</string>
+    <string name="surface_high_contrast_label">Ясен контраст</string>
+    <string name="surface_high_contrast_desc">Изчистена повърхност с висока четливост</string>
+    <string name="surface_soft_glass_label">Нежна полупрозрачност</string>
+    <string name="surface_soft_glass_desc">Фин матиран воал над тапета</string>
+
+    <!-- Font styles & Text scales -->
+    <string name="font_pixel_sans_label">Pixel Sans</string>
+    <string name="font_pixel_sans_desc">Модерен sans-serif · като при Pixel уиджетите</string>
+    <string name="font_editorial_serif_label">Класически Serif</string>
+    <string name="font_editorial_serif_desc">Книжен серифен шрифт</string>
+    <string name="scale_compact">Компактен</string>
+    <string name="scale_comfortable">Балансиран</string>
+    <string name="scale_large">Голям</string>
+
+    <!-- App Theme modes -->
+    <string name="theme_system">Системна</string>
+    <string name="theme_light">Светла</string>
+    <string name="theme_dark">Тъмна</string>
+
+    <!-- Themes -->
+    <string name="verse_theme_peace">Мир</string>
+    <string name="verse_theme_strength">Сила</string>
+    <string name="verse_theme_wisdom">Мъдрост</string>
+    <string name="verse_theme_hope">Надежда</string>
+    <string name="verse_theme_love">Любов</string>
+    <string name="verse_theme_gratitude">Благодарност</string>
+
+    <!-- 29 Material 3 Expressive Shape Names -->
+    <string name="shape_circle">Кръг</string>
+    <string name="shape_square">Квадрат</string>
+    <string name="shape_slanted">Наклонен</string>
+    <string name="shape_arch">Арка</string>
+    <string name="shape_semicircle">Полукръг</string>
+    <string name="shape_oval">Овал</string>
+    <string name="shape_pill">Капсула</string>
+    <string name="shape_triangle">Триъгълник</string>
+    <string name="shape_arrow">Стрела</string>
+    <string name="shape_fan">Ветрило</string>
+    <string name="shape_diamond">Ромб</string>
+    <string name="shape_clamshell">Мида</string>
+    <string name="shape_pentagon">Петоъгълник</string>
+    <string name="shape_gem">Кристал</string>
+    <string name="shape_very_sunny">Лъчисто слънце</string>
+    <string name="shape_sunny">Слънце</string>
+    <string name="shape_cookie_4">4-лъчна бисквитка</string>
+    <string name="shape_cookie_6">6-лъчна бисквитка</string>
+    <string name="shape_cookie_7">7-лъчна бисквитка</string>
+    <string name="shape_cookie_9">9-лъчна бисквитка</string>
+    <string name="shape_cookie_12">12-лъчна бисквитка</string>
+    <string name="shape_clover_4">4-листна детелина</string>
+    <string name="shape_clover_8">8-листна детелина</string>
+    <string name="shape_burst">Отблясък</string>
+    <string name="shape_soft_burst">Мек отблясък</string>
+    <string name="shape_flower">Цвете</string>
+    <string name="shape_puffy">Облаче</string>
+    <string name="shape_ghostish">Силует</string>
+    <string name="shape_bun">Пухче</string>
+
+    <!-- Library -->
+    <string name="library_title">Библиотека</string>
+    <string name="library_search_hint">Търсете стихове, книги или теми</string>
+    <string name="library_filter_all">Всички</string>
+    <string name="library_filter_saved">Запазени</string>
+    <string name="library_badge_today">Днес</string>
+    <string name="library_empty_saved_title">Няма запазени стихове</string>
+    <string name="library_empty_saved_body">Докоснете сърцето на някой дневен стих или глава, за да го запазите за размисъл.</string>
+    <string name="library_empty_search_title">Няма намерени стихове</string>
+    <string name="library_empty_search_body">Опитайте да потърсите книга като Псалм, Притчи, или дума като мир или сила.</string>
+
+    <!-- Reader -->
+    <string name="reader_back">Назад</string>
+    <string name="reader_highlighted_note">Избран стих</string>
+    <string name="reader_reading_in_context">Четете %1$s в контекст</string>
+    <string name="reader_translation_sheet_title">Изберете превод</string>
+    <string name="reader_translation_sheet_subtitle">Прилага се за приложението и уиджетите на началния екран.</string>
+
+    <!-- Content descriptions -->
+    <string name="cd_change_translation">Смяна на библейския превод</string>
+    <string name="cd_about_selah">Относно Selah</string>
+    <string name="cd_search_scriptures">Търсене в Писанието</string>
+    <string name="cd_clear_search">Изчистване на търсенето</string>
+    <string name="cd_selected">Избрано</string>
+
+    <!-- About / Privacy -->
+    <string name="about_title">Относно Selah</string>
+    <string name="about_body">Selah е спокойно приложение с отворен код за ежедневен библейски стих, създадено за поверителност и съсредоточеност.\n\n• 100% офлайн — не изисква достъп до интернет\n• Без профили, без проследяване, без реклами\n• Преводи в обществено достояние: Библия 1940 (ББ40), Louis Segond 1910 (LSG), World English Bible (WEB), King James Version (KJV), American Standard Version (ASV) и Bible in Basic English (BBE)\n• Автоматично ежедневно обновяване на уиджета с динамични цветове Material You</string>
+    <string name="action_close">Затвори</string>
+</resources>

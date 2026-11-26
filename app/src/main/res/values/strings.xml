@@ -19,14 +19,18 @@
     <string name="action_read_chapter">Read in context</string>
     <string name="action_favorite_add">Save verse</string>
     <string name="action_favorite_remove">Remove from saved</string>
+    <string name="action_save">Save</string>
+    <string name="action_saved">Saved</string>
     <string name="action_share">Share</string>
     <string name="action_copy">Copy</string>
+    <string name="share_chooser_title">Share verse</string>
     <string name="snackbar_copied">Verse copied to clipboard</string>
     <string name="snackbar_saved">Saved to your favorites</string>
     <string name="snackbar_removed">Removed from favorites</string>
     <string name="today_widget_promo_title">Home Screen Widget</string>
     <string name="today_widget_promo_subtitle">Updates automatically each day with your wallpaper colors.</string>
     <string name="today_widget_promo_action">Customize</string>
+    <string name="today_footer_note">Offline · Private · Automatically refreshes each morning</string>
     <string name="today_reflection_label">Take a quiet moment</string>
 
     <!-- Widget Studio -->
@@ -38,6 +42,8 @@
     <string name="widget_pin_requested">Widget prompt opened — place it on your home screen.</string>
     <string name="widget_pin_manual_title">Add widget from your home screen</string>
     <string name="widget_pin_manual_body">Your launcher does not support one-tap pinning. Long-press an empty space on your home screen, choose Widgets, and select Selah (Small, Medium, or Large).</string>
+    <string name="widget_section_language">Language</string>
+    <string name="widget_section_language_subtitle">App interface and Bible verses</string>
     <string name="widget_section_shape">Widget Shape</string>
     <string name="widget_shape_all_button">All %1$d</string>
     <string name="widget_shape_gallery_title">Expressive Shapes</string>
@@ -49,11 +55,75 @@
     <string name="toggle_dynamic_color">Dynamic wallpaper colors</string>
     <string name="toggle_dynamic_color_desc">Match your device wallpaper palette (Android 12+)</string>
 
+    <!-- Surface styles -->
+    <string name="surface_dynamic_tonal_label">Dynamic Tonal</string>
+    <string name="surface_dynamic_tonal_desc">Soft wallpaper surface with balanced contrast</string>
+    <string name="surface_dynamic_expressive_label">Expressive Accent</string>
+    <string name="surface_dynamic_expressive_desc">Rich Material You container wash</string>
+    <string name="surface_high_contrast_label">Crisp Contrast</string>
+    <string name="surface_high_contrast_desc">Clean high-legibility surface</string>
+    <string name="surface_soft_glass_label">Soft Translucent</string>
+    <string name="surface_soft_glass_desc">Gentle frosted veil over wallpaper</string>
+
+    <!-- Font styles & Text scales -->
+    <string name="font_pixel_sans_label">Pixel Sans</string>
+    <string name="font_pixel_sans_desc">Clean modern sans · matches Pixel widgets</string>
+    <string name="font_editorial_serif_label">Editorial Serif</string>
+    <string name="font_editorial_serif_desc">Classic book serif</string>
+    <string name="scale_compact">Compact</string>
+    <string name="scale_comfortable">Balanced</string>
+    <string name="scale_large">Large</string>
+
+    <!-- App Theme modes -->
+    <string name="theme_system">System</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+
+    <!-- Themes -->
+    <string name="verse_theme_peace">Peace</string>
+    <string name="verse_theme_strength">Strength</string>
+    <string name="verse_theme_wisdom">Wisdom</string>
+    <string name="verse_theme_hope">Hope</string>
+    <string name="verse_theme_love">Love</string>
+    <string name="verse_theme_gratitude">Gratitude</string>
+
+    <!-- 29 Material 3 Expressive Shape Names -->
+    <string name="shape_circle">Circle</string>
+    <string name="shape_square">Square</string>
+    <string name="shape_slanted">Slanted</string>
+    <string name="shape_arch">Arch</string>
+    <string name="shape_semicircle">Semicircle</string>
+    <string name="shape_oval">Oval</string>
+    <string name="shape_pill">Pill</string>
+    <string name="shape_triangle">Triangle</string>
+    <string name="shape_arrow">Arrow</string>
+    <string name="shape_fan">Fan</string>
+    <string name="shape_diamond">Diamond</string>
+    <string name="shape_clamshell">Clamshell</string>
+    <string name="shape_pentagon">Pentagon</string>
+    <string name="shape_gem">Gem</string>
+    <string name="shape_very_sunny">Very sunny</string>
+    <string name="shape_sunny">Sunny</string>
+    <string name="shape_cookie_4">4-sided cookie</string>
+    <string name="shape_cookie_6">6-sided cookie</string>
+    <string name="shape_cookie_7">7-sided cookie</string>
+    <string name="shape_cookie_9">9-sided cookie</string>
+    <string name="shape_cookie_12">12-sided cookie</string>
+    <string name="shape_clover_4">4-leaf clover</string>
+    <string name="shape_clover_8">8-leaf clover</string>
+    <string name="shape_burst">Burst</string>
+    <string name="shape_soft_burst">Soft burst</string>
+    <string name="shape_flower">Flower</string>
+    <string name="shape_puffy">Puffy</string>
+    <string name="shape_ghostish">Ghost-ish</string>
+    <string name="shape_bun">Bun</string>
+
     <!-- Library -->
     <string name="library_title">Scripture Library</string>
     <string name="library_search_hint">Search verses, books, or themes</string>
     <string name="library_filter_all">All</string>
     <string name="library_filter_saved">Saved</string>
+    <string name="library_badge_today">Today</string>
     <string name="library_empty_saved_title">No saved verses yet</string>
     <string name="library_empty_saved_body">Tap the heart on any daily verse or chapter passage to keep it close for quiet reflection.</string>
     <string name="library_empty_search_title">No matching verses</string>
@@ -62,10 +132,19 @@
     <!-- Reader -->
     <string name="reader_back">Navigate back</string>
     <string name="reader_highlighted_note">Featured verse</string>
+    <string name="reader_reading_in_context">Reading %1$s in context</string>
     <string name="reader_translation_sheet_title">Choose translation</string>
+    <string name="reader_translation_sheet_subtitle">Applies to both the app and your home screen widgets.</string>
+
+    <!-- Content descriptions -->
+    <string name="cd_change_translation">Change Bible translation</string>
+    <string name="cd_about_selah">About Selah</string>
+    <string name="cd_search_scriptures">Search scriptures</string>
+    <string name="cd_clear_search">Clear search</string>
+    <string name="cd_selected">Selected</string>
 
     <!-- About / Privacy -->
     <string name="about_title">About Selah</string>
-    <string name="about_body">Selah is a calm, open-source daily scripture app built for privacy and focus.\n\n• 100% offline — no internet permission required\n• No accounts, no tracking, no ads\n• Public domain translations: World English Bible (WEB), King James Version (KJV), American Standard Version (ASV), and Bible in Basic English (BBE)\n• Automatic daily widget updates with Material You dynamic colors</string>
+    <string name="about_body">Selah is a calm, open-source daily scripture app built for privacy and focus.\n\n• 100% offline — no internet permission required\n• No accounts, no tracking, no ads\n• Public domain translations: World English Bible (WEB), King James Version (KJV), American Standard Version (ASV), Bible in Basic English (BBE), Louis Segond 1910 (LSG), and Bulgarian Bible 1940 (ББ40)\n• Automatic daily widget updates with Material You dynamic colors</string>
     <string name="action_close">Close</string>
 </resources>

@@ -73,6 +73,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.R
+import com.example.model.AppLanguage
 import com.example.model.AppThemeMode
 import com.example.model.BibleTranslation
 import com.example.model.WidgetColorStyle
@@ -83,8 +84,9 @@ import com.example.model.WidgetTextScale
 import com.example.ui.SelahUiState
 import com.example.ui.components.M3ExpressiveComposeShape
 import com.example.ui.components.WidgetPreviewStage
-import com.example.ui.theme.GoogleSansFlexFontFamily
-import com.example.ui.theme.NewsreaderFontFamily
+import com.example.ui.theme.bodySansFontFamily
+import com.example.ui.theme.editorialSerifFontFamily
+import com.example.ui.theme.uiSansFontFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -92,6 +94,7 @@ fun WidgetStudioScreen(
     uiState: SelahUiState,
     onSelectPreviewSize: (WidgetSize) -> Unit,
     onRequestPinWidget: (WidgetSize) -> Boolean,
+    onSelectLanguage: (AppLanguage) -> Unit,
     onSelectShape: (WidgetShape) -> Unit,
     onSelectTranslation: (BibleTranslation) -> Unit,
     onSelectColorStyle: (WidgetColorStyle) -> Unit,
@@ -149,7 +152,7 @@ fun WidgetStudioScreen(
                         modifier = Modifier.testTag("widget_size_option_${size.name.lowercase()}")
                     ) {
                         Text(
-                            text = "${size.label} ${size.dimensionsLabel}",
+                            text = "${stringResource(size.labelRes)} ${size.dimensionsLabel}",
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
@@ -184,7 +187,7 @@ fun WidgetStudioScreen(
                 Text(
                     text = stringResource(
                         R.string.widget_add_button,
-                        uiState.selectedPreviewSize.label
+                        stringResource(uiState.selectedPreviewSize.labelRes)
                     ),
                     style = MaterialTheme.typography.labelLarge
                 )
@@ -193,7 +196,7 @@ fun WidgetStudioScreen(
             // Section 1: Material 3 Expressive Shapes (29 shapes)
             StudioSectionCard(
                 title = stringResource(R.string.widget_section_shape),
-                subtitle = prefs.widgetShape.label,
+                subtitle = stringResource(prefs.widgetShape.labelRes),
                 headerAction = {
                     FilledTonalButton(
                         onClick = { showShapeGallerySheet = true },
@@ -241,7 +244,38 @@ fun WidgetStudioScreen(
                 }
             }
 
-            // Section 2: Bible Translation
+            // Section 2: App & Verse Language
+            StudioSectionCard(
+                title = stringResource(R.string.widget_section_language),
+                subtitle = stringResource(R.string.widget_section_language_subtitle)
+            ) {
+                SingleChoiceSegmentedButtonRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("studio_language_selector")
+                ) {
+                    AppLanguage.entries.forEachIndexed { index, language ->
+                        SegmentedButton(
+                            selected = prefs.appLanguage == language,
+                            onClick = { onSelectLanguage(language) },
+                            shape = SegmentedButtonDefaults.itemShape(
+                                index = index,
+                                count = AppLanguage.entries.size
+                            ),
+                            modifier = Modifier.testTag("studio_language_${language.id}")
+                        ) {
+                            Text(
+                                text = language.nativeName,
+                                fontFamily = bodySansFontFamily(language),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                    }
+                }
+            }
+
+            // Section 3: Bible Translation
             StudioSectionCard(title = stringResource(R.string.widget_section_translation)) {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     BibleTranslation.entries.chunked(2).forEach { rowItems ->
@@ -251,12 +285,13 @@ fun WidgetStudioScreen(
                         ) {
                             rowItems.forEach { translation ->
                                 val selected = prefs.translation == translation
+                                val itemFont = bodySansFontFamily(translation.language)
                                 Surface(
                                     modifier = Modifier
                                         .weight(1f)
                                         .clip(RoundedCornerShape(20.dp))
                                         .clickable { onSelectTranslation(translation) }
-                                        .testTag("studio_translation_${translation.code.lowercase()}"),
+                                        .testTag("studio_translation_${translation.name.lowercase()}"),
                                     shape = RoundedCornerShape(20.dp),
                                     color = if (selected) {
                                         MaterialTheme.colorScheme.primaryContainer
@@ -283,7 +318,9 @@ fun WidgetStudioScreen(
                                         ) {
                                             Text(
                                                 text = translation.code,
-                                                style = MaterialTheme.typography.titleMedium,
+                                                style = MaterialTheme.typography.titleMedium.copy(
+                                                    fontFamily = itemFont
+                                                ),
                                                 color = if (selected) {
                                                     MaterialTheme.colorScheme.onPrimaryContainer
                                                 } else {
@@ -293,15 +330,23 @@ fun WidgetStudioScreen(
                                             if (selected) {
                                                 Icon(
                                                     imageVector = Icons.Rounded.Check,
-                                                    contentDescription = "Selected",
+                                                    contentDescription = stringResource(R.string.cd_selected),
                                                     tint = MaterialTheme.colorScheme.primary,
                                                     modifier = Modifier.size(16.dp)
+                                                )
+                                            } else {
+                                                Text(
+                                                    text = translation.language.id.uppercase(),
+                                                    style = MaterialTheme.typography.labelSmall,
+                                                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                                                 )
                                             }
                                         }
                                         Text(
                                             text = translation.displayName,
-                                            style = MaterialTheme.typography.bodySmall,
+                                            style = MaterialTheme.typography.bodySmall.copy(
+                                                fontFamily = itemFont
+                                            ),
                                             color = if (selected) {
                                                 MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
                                             } else {
@@ -373,12 +418,12 @@ fun WidgetStudioScreen(
                                 Spacer(modifier = Modifier.width(14.dp))
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(
-                                        text = style.label,
+                                        text = stringResource(style.labelRes),
                                         style = MaterialTheme.typography.titleMedium,
                                         color = MaterialTheme.colorScheme.onSurface
                                     )
                                     Text(
-                                        text = style.subtitle,
+                                        text = stringResource(style.subtitleRes),
                                         style = MaterialTheme.typography.bodySmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
@@ -386,7 +431,7 @@ fun WidgetStudioScreen(
                                 if (selected) {
                                     Icon(
                                         imageVector = Icons.Rounded.Check,
-                                        contentDescription = "Selected surface",
+                                        contentDescription = stringResource(R.string.cd_selected),
                                         tint = MaterialTheme.colorScheme.primary
                                     )
                                 }
@@ -431,11 +476,11 @@ fun WidgetStudioScreen(
                                     verticalArrangement = Arrangement.spacedBy(4.dp)
                                 ) {
                                     Text(
-                                        text = "Aa",
+                                        text = if (prefs.translation.language == AppLanguage.BULGARIAN) "Аа" else "Aa",
                                         fontFamily = if (fontStyle == WidgetFontStyle.EDITORIAL_SERIF) {
-                                            NewsreaderFontFamily
+                                            editorialSerifFontFamily(prefs.translation.language)
                                         } else {
-                                            GoogleSansFlexFontFamily
+                                            uiSansFontFamily(prefs.translation.language)
                                         },
                                         fontSize = 26.sp,
                                         fontWeight = FontWeight.Medium,
@@ -446,7 +491,7 @@ fun WidgetStudioScreen(
                                         }
                                     )
                                     Text(
-                                        text = fontStyle.label,
+                                        text = stringResource(fontStyle.labelRes),
                                         style = MaterialTheme.typography.titleSmall,
                                         color = if (selected) {
                                             MaterialTheme.colorScheme.onPrimaryContainer
@@ -455,7 +500,7 @@ fun WidgetStudioScreen(
                                         }
                                     )
                                     Text(
-                                        text = fontStyle.subtitle,
+                                        text = stringResource(fontStyle.subtitleRes),
                                         style = MaterialTheme.typography.bodySmall,
                                         color = if (selected) {
                                             MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.78f)
@@ -482,14 +527,18 @@ fun WidgetStudioScreen(
                                     count = WidgetTextScale.entries.size
                                 )
                             ) {
-                                Text(scale.label)
+                                Text(
+                                    text = stringResource(scale.labelRes),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
                             }
                         }
                     }
                 }
             }
 
-            // Section 5: App Theme
+            // Section 6: App Theme
             StudioSectionCard(title = stringResource(R.string.widget_section_theme)) {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     SingleChoiceSegmentedButtonRow(
@@ -506,7 +555,11 @@ fun WidgetStudioScreen(
                                     count = AppThemeMode.entries.size
                                 )
                             ) {
-                                Text(mode.label)
+                                Text(
+                                    text = stringResource(mode.labelRes),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
                             }
                         }
                     }
@@ -707,7 +760,7 @@ private fun WidgetStudioHeader(
         ) {
             Icon(
                 imageVector = Icons.Outlined.Info,
-                contentDescription = "About Selah",
+                contentDescription = stringResource(R.string.cd_about_selah),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
@@ -769,17 +822,18 @@ private fun ShapePickerTile(
                             }
                         )
                 )
+                val shapeLabel = stringResource(shapeOption.labelRes)
                 if (selected) {
                     Icon(
                         imageVector = Icons.Rounded.Check,
-                        contentDescription = "Selected ${shapeOption.label}",
+                        contentDescription = "${stringResource(R.string.cd_selected)} $shapeLabel",
                         tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.size(18.dp)
                     )
                 }
             }
             Text(
-                text = shapeOption.label,
+                text = stringResource(shapeOption.labelRes),
                 style = MaterialTheme.typography.labelSmall,
                 color = if (selected) {
                     MaterialTheme.colorScheme.onPrimaryContainer

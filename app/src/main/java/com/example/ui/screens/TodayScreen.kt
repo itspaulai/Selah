@@ -60,7 +60,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.R
 import com.example.ui.SelahUiState
-import com.example.ui.theme.NewsreaderFontFamily
+import com.example.ui.theme.bodySansFontFamily
+import com.example.ui.theme.editorialSerifFontFamily
 
 @Composable
 fun TodayScreen(
@@ -136,13 +137,15 @@ fun TodayScreen(
                         ) {
                             Text(
                                 text = prefs.translation.code,
-                                style = MaterialTheme.typography.labelLarge,
+                                style = MaterialTheme.typography.labelLarge.copy(
+                                    fontFamily = bodySansFontFamily(prefs.translation.language)
+                                ),
                                 color = MaterialTheme.colorScheme.onSecondaryContainer
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Icon(
                                 imageVector = Icons.Rounded.ExpandMore,
-                                contentDescription = "Change Bible translation",
+                                contentDescription = stringResource(R.string.cd_change_translation),
                                 tint = MaterialTheme.colorScheme.onSecondaryContainer,
                                 modifier = Modifier.size(18.dp)
                             )
@@ -155,7 +158,7 @@ fun TodayScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.Info,
-                            contentDescription = "About Selah",
+                            contentDescription = stringResource(R.string.cd_about_selah),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -234,7 +237,7 @@ fun TodayScreen(
                                 color = MaterialTheme.colorScheme.surfaceContainerHighest.copy(alpha = 0.8f)
                             ) {
                                 Text(
-                                    text = verse.theme.label,
+                                    text = stringResource(verse.theme.labelRes),
                                     style = MaterialTheme.typography.labelMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
@@ -243,10 +246,12 @@ fun TodayScreen(
                         }
 
                         // Sculptural serif quote ornament + verse text
+                        val verseFont = editorialSerifFontFamily(prefs.translation.language)
+                        val verseMetaFont = bodySansFontFamily(prefs.translation.language)
                         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                             Text(
                                 text = "“",
-                                fontFamily = NewsreaderFontFamily,
+                                fontFamily = verseFont,
                                 fontSize = 54.sp,
                                 lineHeight = 36.sp,
                                 color = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
@@ -256,10 +261,11 @@ fun TodayScreen(
                                 targetState = prefs.translation to verse.textFor(prefs.translation),
                                 transitionSpec = { fadeIn() togetherWith fadeOut() },
                                 label = "verse_translation_crossfade"
-                            ) { (_, verseText) ->
+                            ) { (targetTranslation, verseText) ->
                                 Text(
                                     text = verseText,
                                     style = MaterialTheme.typography.headlineLarge.copy(
+                                        fontFamily = editorialSerifFontFamily(targetTranslation.language),
                                         fontSize = 25.sp,
                                         lineHeight = 36.sp
                                     ),
@@ -271,12 +277,14 @@ fun TodayScreen(
                         // Reference & Chapter Title
                         Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                             Text(
-                                text = "${verse.reference} · ${prefs.translation.code}",
-                                style = MaterialTheme.typography.titleMedium,
+                                text = "${verse.referenceFor(prefs.translation)} · ${prefs.translation.code}",
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    fontFamily = verseMetaFont
+                                ),
                                 color = MaterialTheme.colorScheme.primary
                             )
                             Text(
-                                text = verse.chapterHeading,
+                                text = verse.chapterHeadingFor(prefs.appLanguage),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -418,7 +426,7 @@ fun TodayScreen(
                             color = MaterialTheme.colorScheme.onSecondaryContainer
                         )
                         Text(
-                            text = "${prefs.widgetShape.label} · ${prefs.widgetColorStyle.label} · ${prefs.widgetFontStyle.label}",
+                            text = "${stringResource(prefs.widgetShape.labelRes)} · ${stringResource(prefs.widgetColorStyle.labelRes)} · ${stringResource(prefs.widgetFontStyle.labelRes)}",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f)
                         )
@@ -446,7 +454,7 @@ fun TodayScreen(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "Offline · Private · Automatically refreshes each morning",
+                    text = stringResource(R.string.today_footer_note),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.78f)
                 )

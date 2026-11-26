@@ -1,10 +1,13 @@
 package com.example.data
 
 import android.content.Context
+import com.example.model.AppLanguage
 import com.example.model.BibleTranslation
 import com.example.model.BibleTranslation.ASV
 import com.example.model.BibleTranslation.BBE
+import com.example.model.BibleTranslation.BG40
 import com.example.model.BibleTranslation.KJV
+import com.example.model.BibleTranslation.LSG
 import com.example.model.BibleTranslation.WEB
 import com.example.model.ChapterVerse
 import com.example.model.DailyVerse
@@ -51,14 +54,22 @@ object BibleCorpus {
                 WEB to "Yahweh is my shepherd: I shall lack nothing.",
                 KJV to "The LORD is my shepherd; I shall not want.",
                 ASV to "Jehovah is my shepherd; I shall not want.",
-                BBE to "The Lord takes care of me as his sheep; I will not be without any good thing."
+                BBE to "The Lord takes care of me as his sheep; I will not be without any good thing.",
+                LSG to "Cantique de David. L'Eternel est mon berger: je ne manquerai de rien.",
+                BG40 to "Давидов псалом. Господ е Пастир мой; Няма да остана в нужда."
             ),
             chapterPassages = mapOf(
                 WEB to listOf(ChapterVerse(1, "Yahweh is my shepherd: I shall lack nothing.", true)),
                 KJV to listOf(ChapterVerse(1, "The LORD is my shepherd; I shall not want.", true)),
                 ASV to listOf(ChapterVerse(1, "Jehovah is my shepherd; I shall not want.", true)),
-                BBE to listOf(ChapterVerse(1, "The Lord takes care of me as his sheep; I will not be without any good thing.", true))
-            )
+                BBE to listOf(ChapterVerse(1, "The Lord takes care of me as his sheep; I will not be without any good thing.", true)),
+                LSG to listOf(ChapterVerse(1, "Cantique de David. L'Eternel est mon berger: je ne manquerai de rien.", true)),
+                BG40 to listOf(ChapterVerse(1, "Давидов псалом. Господ е Пастир мой; Няма да остана в нужда.", true))
+            ),
+            bookFr = "Psaume",
+            bookBg = "Псалм",
+            chapterHeadingFr = "L’Éternel est mon berger",
+            chapterHeadingBg = "Господ е мой Пастир"
         )
     }
 
@@ -109,10 +120,13 @@ object BibleCorpus {
             KJV -> 1
             ASV -> 2
             BBE -> 3
+            LSG -> 4
+            BG40 -> 5
         }
         return spec.entries.mapNotNull { (verseNum, isFeatured) ->
             val key = "${spec.bookIndex}:${spec.chapter}:$verseNum"
             val texts = current.passagePool[key] ?: return@mapNotNull null
+            if (tIdx >= texts.size) return@mapNotNull null
             ChapterVerse(
                 number = verseNum,
                 text = texts[tIdx],
@@ -121,14 +135,32 @@ object BibleCorpus {
         }
     }
 
-    fun formattedDateFull(calendar: Calendar = Calendar.getInstance()): String {
-        val formatter = SimpleDateFormat("EEEE, MMMM d", Locale.getDefault())
-        return formatter.format(calendar.time)
+    fun formattedDateFull(
+        calendar: Calendar = Calendar.getInstance(),
+        language: AppLanguage = AppLanguage.fromSystemLocale()
+    ): String {
+        val pattern = when (language) {
+            AppLanguage.ENGLISH -> "EEEE, MMMM d"
+            AppLanguage.FRENCH -> "EEEE d MMMM"
+            AppLanguage.BULGARIAN -> "EEEE, d MMMM"
+        }
+        val formatter = SimpleDateFormat(pattern, language.locale)
+        val formatted = formatter.format(calendar.time)
+        return formatted.replaceFirstChar { ch ->
+            if (ch.isLowerCase()) ch.titlecase(language.locale) else ch.toString()
+        }
     }
 
-    fun formattedDateShort(calendar: Calendar = Calendar.getInstance()): String {
-        val formatter = SimpleDateFormat("MMM d", Locale.getDefault())
-        return formatter.format(calendar.time).uppercase(Locale.getDefault())
+    fun formattedDateShort(
+        calendar: Calendar = Calendar.getInstance(),
+        language: AppLanguage = AppLanguage.fromSystemLocale()
+    ): String {
+        val pattern = when (language) {
+            AppLanguage.ENGLISH -> "MMM d"
+            AppLanguage.FRENCH, AppLanguage.BULGARIAN -> "d MMM"
+        }
+        val formatter = SimpleDateFormat(pattern, language.locale)
+        return formatter.format(calendar.time).uppercase(language.locale)
     }
 
     private fun parseCorpus(jsonText: String): LoadedCorpus {
@@ -136,18 +168,22 @@ object BibleCorpus {
         val booksArr = root.getJSONArray("books")
         val books = Array(booksArr.length()) { i -> booksArr.getString(i) }
 
+        val booksFrArr = root.optJSONArray("books_fr")
+        val booksFr = Array(books.size) { i -> booksFrArr?.optString(i).takeUnless { it.isNullOrBlank() } ?: books[i] }
+
+        val booksBgArr = root.optJSONArray("books_bg")
+        val booksBg = Array(books.size) { i -> booksBgArr?.optString(i).takeUnless { it.isNullOrBlank() } ?: books[i] }
+
+        val headingsFrObj = root.optJSONObject("headings_fr")
+        val headingsBgObj = root.optJSONObject("headings_bg")
+
         val poolObj = root.getJSONObject("pool")
         val poolMap = HashMap<String, Array<String>>(poolObj.length() * 2)
         val poolKeys = poolObj.keys()
         while (poolKeys.hasNext()) {
             val key = poolKeys.next()
             val arr = poolObj.getJSONArray(key)
-            poolMap[key] = arrayOf(
-                arr.getString(0),
-                arr.getString(1),
-                arr.getString(2),
-                arr.getString(3)
-            )
+            poolMap[key] = Array(arr.length()) { idx -> arr.getString(idx) }
         }
 
         val themes = VerseTheme.entries
@@ -165,6 +201,17 @@ object BibleCorpus {
             val heading = item.getString("h")
             val themeIdx = item.getInt("t").coerceIn(0, themes.lastIndex)
 
+            val translations = mutableMapOf(
+                WEB to item.getString("w"),
+                KJV to item.getString("k"),
+                ASV to item.getString("a"),
+                BBE to item.getString("e")
+            )
+            val frText = item.optString("f")
+            if (frText.isNotBlank()) translations[LSG] = frText
+            val bgText = item.optString("bg")
+            if (bgText.isNotBlank()) translations[BG40] = bgText
+
             val verse = DailyVerse(
                 id = id,
                 book = books[bookIndex],
@@ -172,12 +219,11 @@ object BibleCorpus {
                 verseRange = verseRange,
                 chapterHeading = heading,
                 theme = themes[themeIdx],
-                translations = mapOf(
-                    WEB to item.getString("w"),
-                    KJV to item.getString("k"),
-                    ASV to item.getString("a"),
-                    BBE to item.getString("e")
-                )
+                translations = translations,
+                bookFr = booksFr[bookIndex],
+                bookBg = booksBg[bookIndex],
+                chapterHeadingFr = headingsFrObj?.optString(heading).takeUnless { it.isNullOrBlank() } ?: heading,
+                chapterHeadingBg = headingsBgObj?.optString(heading).takeUnless { it.isNullOrBlank() } ?: heading
             )
             verseList.add(verse)
             byId[id] = verse
