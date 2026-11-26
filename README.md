@@ -181,18 +181,3 @@ Out of the box, the workflow automatically produces an installable APK right awa
 | `KEY_PASSWORD` | Your `upload` key password |
 
 Once those secrets are configured, the **Release APK** workflow automatically builds and attaches a production-signed `Selah-vX.Y.Z-release.apk`.
-
----
-
-<details>
-<summary><strong>🔍 Recommended GitHub Repository Description & SEO Topics (Click to copy)</strong></summary>
-
-<br />
-
-**GitHub "About" Description (under 350 chars, Google & GitHub SEO optimized):**
-> Calm, 100% offline, open-source daily Bible verse app & Material 3 Expressive home screen widget for Android. 29 borderless Material You shapes, Pixel-native typography, 1,000 curated verses across WEB, KJV, ASV & BBE with chapter context — zero ads, zero permissions.
-
-**GitHub Topics (paste into repository Topics):**
-`android` · `bible` · `bible-verse` · `daily-bible-verse` · `android-widget` · `material-you` · `material-3` · `material-3-expressive` · `jetpack-compose` · `kotlin` · `offline-first` · `open-source` · `privacy` · `pixel-widget` · `scripture` · `christian`
-
-</details>
