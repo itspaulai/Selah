@@ -1,15 +1,18 @@
 package com.example.ui.screens
 
 import android.os.Build
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -39,6 +42,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -53,6 +57,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -102,6 +107,14 @@ fun WidgetStudioScreen(
     var showManualPinDialog by remember { mutableStateOf(false) }
     var showShapeGallerySheet by remember { mutableStateOf(false) }
     val shapeCarouselState = rememberLazyListState()
+    val controlsScrollState = rememberScrollState()
+    val isControlsScrolled by remember {
+        derivedStateOf { controlsScrollState.value > 4 }
+    }
+    val dividerAlpha by animateFloatAsState(
+        targetValue = if (isControlsScrolled) 0.55f else 0f,
+        label = "studio_sticky_divider_alpha"
+    )
 
     LaunchedEffect(prefs.widgetShape) {
         val index = WidgetShape.entries.indexOf(prefs.widgetShape)
@@ -110,57 +123,15 @@ fun WidgetStudioScreen(
         }
     }
 
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.TopCenter
-    ) {
+    val controlsContent: @Composable (androidx.compose.ui.unit.Dp) -> Unit = { horizontalPadding ->
         Column(
             modifier = Modifier
-                .widthIn(max = 640.dp)
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 20.dp, vertical = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+                .fillMaxWidth()
+                .verticalScroll(controlsScrollState)
+                .padding(horizontal = horizontalPadding)
+                .padding(top = 14.dp, bottom = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(18.dp)
         ) {
-            // Header
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = stringResource(R.string.widget_studio_title),
-                        style = MaterialTheme.typography.displaySmall,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-                    Text(
-                        text = stringResource(R.string.widget_studio_subtitle),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-
-                IconButton(
-                    onClick = onOpenAbout,
-                    modifier = Modifier.testTag("widget_about_button")
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Info,
-                        contentDescription = "About Selah",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-
-            // Live Interactive Preview Stage
-            WidgetPreviewStage(
-                verse = uiState.todayVerse,
-                preferences = prefs,
-                previewSize = uiState.selectedPreviewSize,
-                onWidgetClick = { onOpenReader(uiState.todayVerse.id) }
-            )
-
             // Size Selector: Small | Medium | Large
             SingleChoiceSegmentedButtonRow(
                 modifier = Modifier
@@ -556,6 +527,88 @@ fun WidgetStudioScreen(
         }
     }
 
+    BoxWithConstraints(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.TopCenter
+    ) {
+        val useTwoPane = maxWidth >= 720.dp
+        val adaptiveMaxCardHeight = (maxHeight * 0.34f).coerceIn(136.dp, 240.dp)
+
+        if (useTwoPane) {
+            Row(
+                modifier = Modifier
+                    .widthIn(max = 1040.dp)
+                    .fillMaxSize()
+                    .padding(horizontal = 20.dp),
+                horizontalArrangement = Arrangement.spacedBy(20.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .weight(0.46f)
+                        .fillMaxHeight()
+                        .padding(top = 12.dp, bottom = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(14.dp)
+                ) {
+                    WidgetStudioHeader(onOpenAbout = onOpenAbout)
+                    WidgetPreviewStage(
+                        verse = uiState.todayVerse,
+                        preferences = prefs,
+                        previewSize = uiState.selectedPreviewSize,
+                        onWidgetClick = { onOpenReader(uiState.todayVerse.id) }
+                    )
+                }
+
+                Box(
+                    modifier = Modifier
+                        .weight(0.54f)
+                        .fillMaxHeight()
+                ) {
+                    controlsContent(0.dp)
+                }
+            }
+        } else {
+            Column(
+                modifier = Modifier
+                    .widthIn(max = 640.dp)
+                    .fillMaxSize()
+            ) {
+                // Pinned Header + Live Interactive Preview Stage
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(horizontal = 20.dp)
+                        .padding(top = 10.dp, bottom = 12.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    WidgetStudioHeader(onOpenAbout = onOpenAbout)
+
+                    WidgetPreviewStage(
+                        verse = uiState.todayVerse,
+                        preferences = prefs,
+                        previewSize = uiState.selectedPreviewSize,
+                        maxCardHeight = adaptiveMaxCardHeight,
+                        onWidgetClick = { onOpenReader(uiState.todayVerse.id) }
+                    )
+                }
+
+                HorizontalDivider(
+                    thickness = 1.dp,
+                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = dividerAlpha)
+                )
+
+                // Independently Scrollable Customization Controls
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                ) {
+                    controlsContent(20.dp)
+                }
+            }
+        }
+    }
+
     if (showManualPinDialog) {
         AlertDialog(
             onDismissRequest = { showManualPinDialog = false },
@@ -628,6 +681,35 @@ fun WidgetStudioScreen(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun WidgetStudioHeader(
+    onOpenAbout: () -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = stringResource(R.string.widget_studio_title),
+            style = MaterialTheme.typography.displaySmall,
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.weight(1f)
+        )
+
+        IconButton(
+            onClick = onOpenAbout,
+            modifier = Modifier.testTag("widget_about_button")
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Info,
+                contentDescription = "About Selah",
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 }

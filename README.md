@@ -27,15 +27,14 @@
   <br />
 
   <p align="center">
-    <img src="docs/play-store/01-home-screen-widgets.jpg" alt="Daily Scripture, Shaped for Your Home Screen" width="23%" />
-    <img src="docs/play-store/02-widget-studio.jpg" alt="29 Material 3 Expressive Shapes" width="23%" />
-    <img src="docs/play-store/03-material-you-colors.jpg" alt="Adapts to Your Wallpaper Automatically" width="23%" />
-    <img src="docs/play-store/04-today-reflection.jpg" alt="A Quiet Moment of Scripture Every Day" width="23%" />
+    <img src="docs/play-store/01-home-screen-widgets.jpg" alt="Daily Scripture, Shaped for Your Home Screen" width="31%" />
+    <img src="docs/play-store/02-widget-studio.jpg" alt="29 Material 3 Expressive Shapes" width="31%" />
+    <img src="docs/play-store/03-material-you-colors.jpg" alt="Adapts to Your Wallpaper Automatically" width="31%" />
   </p>
   <p align="center">
-    <img src="docs/play-store/05-chapter-reader.jpg" alt="Read Every Daily Verse in Full Context" width="23%" />
-    <img src="docs/play-store/06-offline-library.jpg" alt="1,000 Curated Verses. Zero Ads or Tracking." width="23%" />
-    <img src="docs/play-store/07-sizes-and-typography.jpg" alt="Small, Medium & Large. Serif or Pixel Sans." width="23%" />
+    <img src="docs/play-store/05-chapter-reader.jpg" alt="Read Every Daily Verse in Full Context" width="31%" />
+    <img src="docs/play-store/06-offline-library.jpg" alt="1,000 Curated Verses. Zero Ads or Tracking." width="31%" />
+    <img src="docs/play-store/07-sizes-and-typography.jpg" alt="Small, Medium & Large. Serif or Pixel Sans." width="31%" />
   </p>
 </div>
 

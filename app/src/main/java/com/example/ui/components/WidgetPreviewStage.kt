@@ -61,12 +61,13 @@ fun WidgetPreviewStage(
     preferences: SelahPreferences,
     previewSize: WidgetSize,
     onWidgetClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    maxCardHeight: androidx.compose.ui.unit.Dp? = null
 ) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(32.dp))
+            .clip(RoundedCornerShape(28.dp))
             .background(MaterialTheme.colorScheme.surfaceContainerHigh)
             .testTag("widget_preview_stage")
     ) {
@@ -94,7 +95,7 @@ fun WidgetPreviewStage(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 18.dp),
+                .padding(horizontal = 16.dp, vertical = 12.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
@@ -128,7 +129,7 @@ fun WidgetPreviewStage(
                 }
             }
 
-            Spacer(modifier = Modifier.height(18.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             AnimatedContent(
                 targetState = previewSize to preferences.widgetShape,
@@ -138,16 +139,20 @@ fun WidgetPreviewStage(
                 },
                 label = "widget_size_shape_preview_transition"
             ) { (targetSize, targetShape) ->
+                val baseBoxHeight = when (targetSize) {
+                    WidgetSize.SMALL -> 192.dp
+                    WidgetSize.MEDIUM -> 164.dp
+                    WidgetSize.LARGE -> 238.dp
+                }
+                val resolvedBoxHeight = if (maxCardHeight != null) {
+                    minOf(baseBoxHeight, maxCardHeight)
+                } else {
+                    baseBoxHeight
+                }
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(
-                            when (targetSize) {
-                                WidgetSize.SMALL -> 212.dp
-                                WidgetSize.MEDIUM -> 188.dp
-                                WidgetSize.LARGE -> 284.dp
-                            }
-                        ),
+                        .height(resolvedBoxHeight),
                     contentAlignment = Alignment.Center
                 ) {
                     LiveWidgetCard(
@@ -155,21 +160,22 @@ fun WidgetPreviewStage(
                         preferences = preferences,
                         size = targetSize,
                         widgetShape = targetShape,
+                        maxHeight = resolvedBoxHeight - 6.dp,
                         onClick = onWidgetClick
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(14.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             Row(
-                horizontalArrangement = Arrangement.spacedBy(14.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 repeat(4) {
                     Box(
                         modifier = Modifier
-                            .size(28.dp)
+                            .size(22.dp)
                             .clip(CircleShape)
                             .background(Color.White.copy(alpha = 0.34f))
                     )
@@ -234,6 +240,7 @@ private fun LiveWidgetCard(
     preferences: SelahPreferences,
     size: WidgetSize,
     widgetShape: WidgetShape,
+    maxHeight: androidx.compose.ui.unit.Dp,
     onClick: () -> Unit
 ) {
     val colors = resolvePreviewColors(preferences.widgetColorStyle)
@@ -243,11 +250,11 @@ private fun LiveWidgetCard(
     }
 
     val cardModifier = when (size) {
-        WidgetSize.SMALL -> Modifier.size(204.dp)
+        WidgetSize.SMALL -> Modifier.size(minOf(186.dp, maxHeight))
         WidgetSize.MEDIUM -> Modifier
             .fillMaxWidth()
-            .height(176.dp)
-        WidgetSize.LARGE -> Modifier.size(276.dp)
+            .height(minOf(158.dp, maxHeight))
+        WidgetSize.LARGE -> Modifier.size(minOf(232.dp, maxHeight))
     }
 
     Surface(
